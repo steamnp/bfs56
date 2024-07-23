@@ -1,6 +1,6 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './main.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./main.css";
 
 // camelCase -> gorakhRajJoshi -> while creating javascript variable
 // PascalCase -> GorakhRajJoshi -> While creating component
@@ -9,11 +9,11 @@ import './main.css'
 // A component name should be written in PascalCase
 // This is App component
 function App() {
-  return <div className="box">Hello</div>
+  return <div className="box">Hello</div>;
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
-)
+);

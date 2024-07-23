@@ -1,8 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./style.css";
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './style.css'
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <header>
       <div className="heading">
@@ -11,10 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       </div>
       <section className="about">
         <h2>About Me</h2>
-        <p>
-          I am a passionate web developer with a love for creating beautiful and
-          functional websites.
-        </p>
+        <p>I am a passionate web developer with a love for creating beautiful and functional websites.</p>
       </section>
       <section className="projects">
         <h2>Projects</h2>
@@ -37,4 +34,4 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       </section>
     </header>
   </React.StrictMode>
-);
+)

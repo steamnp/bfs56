@@ -1,0 +1,37 @@
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  text-align: center;
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+section {
+  padding: 20px;
+  margin: 20px;
+  border: 1px solid #ccc;
+}
+
+.about {
+  background-color: #e7f3fe;
+}
+
+.projects {
+  background-color: #e2f0d9;
+}
+
+.project {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.contact {
+  background-color: #ffe7e7;
+}

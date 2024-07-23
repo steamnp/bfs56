@@ -2,21 +2,20 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./main.css";
 
+//block level element : div, section, main, footer, header to make it block element
+// display: inline; in css
+
+//inline level element : span, button, to make it inline element
+//display: block; in css
+
+//to know what to use block level element or inline level
+//look for Semantic of html
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <main className="container">
-      <section className="sectionOne">
-        <div className="boxOne">
-          <h1 className="firstHeading">Heading1</h1>
-          <p className="paragraphTwo">Paragraph1</p>
-        </div>
-      </section>
-      <section className="sectionTwo">
-        <div className="boxTwo">
-          <h1 className="secondHeading">Heading2</h1>
-          <p className="paragraphTwo">Paragraph2</p>
-        </div>
-      </section>
-    </main>
+    <div className="box">Hello</div>
+    <span className="inline">Hello</span>
+    <span className="inline2">I am another inline</span>
+    <section className="section">I am section</section>
+    <button className="btn">Click Me</button>
   </React.StrictMode>
 );

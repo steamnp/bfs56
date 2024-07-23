@@ -29,11 +29,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </div>
         <div className="project1">
           <h4>Project1</h4>
-          <p>A web Application for managing tasks.</p>
+          <p>A portfolio website for showcasing my work.</p>
         </div>
         <div className="project1">
           <h4>Project1</h4>
-          <p>A web Application for managing tasks.</p>
+          <p>An e-commerce site for selling products online.</p>
         </div>
       </div>
     </section>

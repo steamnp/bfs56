@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    font-family: 'Red Hat Text';
+    font-family: "Red Hat Text";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -18,11 +18,11 @@ body {
 }
 
 h1 {
-  @apply text-5xl font-bold mb-10;
+  @apply mb-10 text-5xl font-bold;
 }
 
 h2 {
-  @apply text-2xl font-bold mb-2;
+  @apply mb-2 text-2xl font-bold;
 }
 
 button {
@@ -34,11 +34,11 @@ button {
 }
 
 .btn-remove svg {
-  @apply text-rose-300 cursor-pointer min-w-5 min-h-5 aspect-square border border-current rounded-full p-1 hover:text-black;
+  @apply p-1 border border-current rounded-full cursor-pointer text-rose-300 min-w-5 min-h-5 aspect-square hover:text-black;
 }
 
 .list {
-  @apply grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3;
+  @apply grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3;
 }
 
 .card {
@@ -51,19 +51,19 @@ button {
 
 .card-button,
 .card-button-active {
-  @apply flex items-center gap-2 w-2/3 mx-auto px-4 py-2 -mt-5 mb-4 rounded-full text-sm outline outline-offset-0 outline-1;
+  @apply flex items-center w-2/3 gap-2 px-4 py-2 mx-auto mb-4 -mt-5 text-sm rounded-full outline outline-offset-0 outline-1;
 }
 
 .card-button {
-  @apply cursor-pointer justify-center bg-white font-semibold outline-rose-300 hover:text-primary hover:outline-primary;
+  @apply justify-center font-semibold bg-white cursor-pointer outline-rose-300 hover:text-primary hover:outline-primary;
 }
 
 .card-button-active {
-  @apply outline-primary justify-between bg-primary text-white;
+  @apply justify-between text-white outline-primary bg-primary;
 }
 
 .btn-quantity svg {
-  @apply text-white cursor-pointer border border-white rounded-full p-1 size-4 hover:text-primary hover:bg-white;
+  @apply p-1 text-white border border-white rounded-full cursor-pointer size-4 hover:text-primary hover:bg-white;
 }
 
 .card-description {
@@ -71,7 +71,7 @@ button {
 }
 
 .modal {
-  @apply fixed inset-0 bg-black bg-opacity-50 grid content-end justify-center sm:place-content-center;
+  @apply fixed inset-0 grid content-end justify-center bg-black bg-opacity-50 sm:place-content-center;
 }
 
 .modal-content {

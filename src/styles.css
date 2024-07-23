@@ -1,37 +1,50 @@
 body {
-  font-family: sans-serif;
+  margin: 0;
+  margin-top: -22px;
 }
-
-.header {
-  background-color: whitesmoke;
+.heading {
   text-align: center;
-  margin: 0;
-  padding: 20px;
+  background-color: rgb(216, 214, 214);
+  padding: 10px;
+  border-bottom: 1px solid;
 }
 
-.about-me {
-  background-color: aqua;
-  margin-left: 0;
-  margin-top: 10px;
-  padding: 10px;
+.about {
+  background-color: rgba(178, 225, 233, 0.972);
+  margin: 14px;
+  padding: 14px;
+  border: 1px solid;
 }
-.project-section {
-  margin: 0;
-  margin-top: 10px;
-}
-.project {
-  background-color: beige;
-  padding: 10px;
+
+.projects {
+  background-color: rgba(182, 232, 184, 0.972);
+  margin: 14px;
+  padding: 14px;
+  border: 1px solid;
 }
 
 .project1 {
-  border: 0.01rem solid black;
-  padding: 10px;
-  margin: 10px;
+  background-color: rgba(182, 232, 184, 0.972);
+  margin: 14px;
+  padding: 14px;
+  border: 1px solid;
+}
+.project2 {
+  background-color: rgba(182, 232, 184, 0.972);
+  margin: 14px;
+  padding: 14px;
+  border: 1px solid;
+}
+.project3 {
+  background-color: rgba(182, 232, 184, 0.972);
+  margin: 14px;
+  padding: 14px;
+  border: 1px solid;
 }
 
-.contact-section {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: burlywood;
+.contact {
+  background-color: rgba(220, 162, 215, 0.972);
+  margin: 14px;
+  padding: 14px;
+  border: 1px solid;
 }

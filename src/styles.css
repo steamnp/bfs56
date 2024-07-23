@@ -1,0 +1,48 @@
+.Portfolio {
+  font-family: sans-serif;
+}
+.Header {
+  text-align: center;
+  border-bottom: 1px solid;
+  padding: 10px;
+  margin: 10px;
+}
+
+.Name {
+  color: cadetblue;
+  font-size: 45px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.Intro {
+  background-color: aquamarine;
+  padding: 10px;
+  margin: 20px;
+  border-radius: 5px;
+  border-color: gray;
+  border: 1px solid;
+}
+
+.Project {
+  background-color: pink;
+  padding: 10px;
+  margin: 20px;
+  border-radius: 5px;
+  border-color: gray;
+  border: 1px solid;
+}
+
+.Contact {
+  background-color: lightblue;
+  padding: 10px;
+  margin: 20px;
+  border-radius: 5px;
+  border-color: gray;
+  border: 1px solid;
+}
+
+.ProjectName {
+  border: 1px solid;
+  padding-left: 5px;
+  margin: 10px;
+}

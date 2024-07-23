@@ -1,37 +1,48 @@
-body {
+.Portfolio {
   font-family: sans-serif;
 }
-
-.header {
-  background-color: whitesmoke;
+.Header {
   text-align: center;
-  margin: 0;
-  padding: 20px;
-}
-
-.about-me {
-  background-color: aqua;
-  margin-left: 0;
-  margin-top: 10px;
-  padding: 10px;
-}
-.project-section {
-  margin: 0;
-  margin-top: 10px;
-}
-.project {
-  background-color: beige;
-  padding: 10px;
-}
-
-.project1 {
-  border: 0.01rem solid black;
+  border-bottom: 1px solid;
   padding: 10px;
   margin: 10px;
 }
 
-.contact-section {
-  margin-top: 10px;
+.Name {
+  color: cadetblue;
+  font-size: 45px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.Intro {
+  background-color: aquamarine;
   padding: 10px;
-  background-color: burlywood;
+  margin: 20px;
+  border-radius: 5px;
+  border-color: gray;
+  border: 1px solid;
+}
+
+.Project {
+  background-color: pink;
+  padding: 10px;
+  margin: 20px;
+  border-radius: 5px;
+  border-color: gray;
+  border: 1px solid;
+}
+
+.Contact {
+  background-color: lightblue;
+  padding: 10px;
+  margin: 20px;
+  border-radius: 5px;
+  border-color: gray;
+  border: 1px solid;
+}
+
+.ProjectName {
+  border: 1px solid;
+  padding-left: 5px;
+  margin: 10px;
 }

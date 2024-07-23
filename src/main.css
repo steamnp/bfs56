@@ -1,13 +1,40 @@
-main {
+.container {
   background-color: red;
-  color: white;
-  padding: 10px;
-  border-radius: 10px;
 }
 
-.box {
-  width: 100px;
-  height: 100px;
-  background-color: green;
-  border-radius: 50%;
+.sectionone {
+  background-color: blue;
+}
+
+.sectiontwo {
+  background-color: purple;
+}
+
+.boxone {
+  background-color: aqua;
+  margin: 10px;
+}
+
+.boxtwo {
+  background-color: aquamarine;
+}
+
+.headingone {
+  background-color: yellow;
+  padding: 10px;
+  margin: 10px;
+}
+
+.paragraphone {
+  background-color: tomato;
+}
+
+.headingtwo {
+  background-color: violet;
+  padding: 10px;
+  margin: 10px;
+}
+
+.paragraphtwo {
+  background-color: chartreuse;
 }

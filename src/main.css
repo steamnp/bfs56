@@ -1,0 +1,38 @@
+header {
+    text-align: center;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-bottom: 1px solid #ccc;
+}
+section {
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid #ccc;
+}
+.section1Bg {
+  background-color: rgb(177, 227, 247);
+  
+}
+.section2Bg {
+  background-color: #e2f0d9;
+  padding: 10px;
+  border: 0.5px solid #ccc;
+ 
+}
+.project1 {
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+.project2 {
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+.project3 {
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+.section3Bg {
+  background-color: pink;
+  
+
+  

@@ -1,0 +1,13 @@
+main {
+  background-color: red;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.box {
+  width: 100px;
+  height: 100px;
+  background-color: green;
+  border-radius: 50%;
+}

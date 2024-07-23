@@ -4,17 +4,19 @@ import "./main.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <form>
-      <label htmlFor="fname">First name:</label>
-      <br />
-      <input type="text" id="fname" name="fname" value="John" />
-      <br />
-      <label htmlFor="lname">Last name:</label>
-      <br />
-      <input type="text" id="lname" name="lname" value="Doe" />
-      <br />
-      <br />
-      <input type="submit" value="submit" />
-    </form>
+    <main className="container">
+      <section className="sectionOne">
+        <div className="boxOne">
+          <h1 className="firstHeading">Heading1</h1>
+          <p className="paragraphTwo">Paragraph1</p>
+        </div>
+      </section>
+      <section className="sectionTwo">
+        <div className="boxTwo">
+          <h1 className="secondHeading">Heading2</h1>
+          <p className="paragraphTwo">Paragraph2</p>
+        </div>
+      </section>
+    </main>
   </React.StrictMode>
 );

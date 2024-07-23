@@ -14,6 +14,11 @@ function App() {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <header>This is header</header>
+    <main>
+      <section>This is title section.</section>
+    </main>
+  </React.StrictMode>
     <App />
   </React.StrictMode>
 )

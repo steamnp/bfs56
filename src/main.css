@@ -1,40 +1,15 @@
-.container {
+.box {
   background-color: red;
 }
 
-.sectionone {
+.inline {
   background-color: blue;
 }
 
-.sectiontwo {
-  background-color: purple;
-}
-
-.boxone {
-  background-color: aqua;
-  margin: 10px;
-}
-
-.boxtwo {
-  background-color: aquamarine;
-}
-
-.headingone {
+.section {
   background-color: yellow;
-  padding: 10px;
-  margin: 10px;
 }
 
-.paragraphone {
-  background-color: tomato;
-}
-
-.headingtwo {
+.btn {
   background-color: violet;
-  padding: 10px;
-  margin: 10px;
-}
-
-.paragraphtwo {
-  background-color: chartreuse;
 }

@@ -1,15 +1,11 @@
+body {
+  margin: 0;
+}
+
 .box {
   background-color: red;
+  padding: 10px;
+  border: 2px solid black;
 }
 
-.inline {
-  background-color: blue;
-}
-
-.section {
-  background-color: yellow;
-}
-
-.btn {
-  background-color: violet;
-}
+/* CSS Box Model */

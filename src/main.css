@@ -4,17 +4,17 @@ header {
     padding: 20px;
     border-bottom: 1px solid #ccc;
 }
-section {
-    padding: 20px;
-    margin: 20px;
-    border: 1px solid #ccc;
-}
 .section1Bg {
   background-color: rgb(177, 227, 247);
-  
+  padding: 20px;
+  margin: 20px;
+  border: 1px solid #ccc;
 }
 .section2Bg {
   background-color: #e2f0d9;
+  padding: 20px;
+  margin: 20px;
+  border: 1px solid #ccc;
 }
 .project1 {
   border: 1px solid #ccc;
@@ -33,6 +33,7 @@ section {
 }
 .section3Bg {
   background-color: pink;
-  
-
+  padding: 20px;
+  margin: 20px;
+  border: 1px solid #ccc;
   

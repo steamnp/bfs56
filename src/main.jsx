@@ -12,7 +12,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
     <header>
       <h1>Amit Gahatraj</h1>
-      <br />
       <p>Student</p>
     </header>
 
@@ -40,9 +39,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </div>
     </section>
 
-    <section className="contacts">
+    <footer className="contacts">
       <h2>Contact</h2>
       <p>sample@gmail.com</p>
-    </section>
+    </footer>
   </React.StrictMode>
 )

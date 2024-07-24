@@ -1,18 +1,18 @@
-body {
+.body {
   font-family: Arial, sans-serif;
   line-height: 1.6;
   margin: 0;
   padding: 0;
 }
 
-header {
+.header {
   text-align: center;
   background-color: #f4f4f4;
   padding: 20px;
   border-bottom: 1px solid #ccc;
 }
 
-section {
+.section {
   padding: 20px;
   margin: 20px;
   border: 1px solid #ccc;

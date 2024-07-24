@@ -8,7 +8,7 @@ import "./styles.css";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <header className="header">
-      <h1 className="heading1">Sandeeb Adhikari</h1>
+      <h1 className="heading1">Lhakpa Sherpa</h1>
       <p className="job-title">Web Developer & Designer</p>
     </header>
     <section className="about-me">

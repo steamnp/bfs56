@@ -4,13 +4,13 @@ header {
     padding: 20px;
     border-bottom: 1px solid #ccc;
 }
-.section1Bg {
+.About {
   background-color: rgb(177, 227, 247);
   padding: 20px;
   margin: 20px;
   border: 1px solid #ccc;
 }
-.section2Bg {
+.Projects {
   background-color: #e2f0d9;
   padding: 20px;
   margin: 20px;
@@ -31,9 +31,9 @@ header {
   padding:10px;
   margin-bottom: 10px;
 }
-.section3Bg {
+.Contact {
   background-color: pink;
   padding: 20px;
-  margin: 20px;
+  margin: 15px;
   border: 1px solid #ccc;
   

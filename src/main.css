@@ -2,10 +2,11 @@ body {
   font-family: sans-serif;
 }
 header {
-  background-color: antiquewhite;
+  background-color: #f4f4f4;
   text-align: center;
-  padding: 10px;
-  margin: 0%;
+  padding: 25px;
+  border-bottom: 1px solid #111;
+  margin: ;
 }
 
 .aboutme {

@@ -15,20 +15,20 @@ section {
 }
 .section2Bg {
   background-color: #e2f0d9;
-  padding: 10px;
-  border: 0.5px solid #ccc;
- 
 }
 .project1 {
   border: 1px solid #ccc;
+  padding:10px;
   margin-bottom: 10px;
 }
 .project2 {
   border: 1px solid #ccc;
+  padding:10px;
   margin-bottom: 10px;
 }
 .project3 {
   border: 1px solid #ccc;
+  padding:10px;
   margin-bottom: 10px;
 }
 .section3Bg {

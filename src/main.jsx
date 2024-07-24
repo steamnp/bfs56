@@ -9,14 +9,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <br />
       <p>Web Developer and Designer</p>
     </header>
-    <section className="section1Bg">
+    <section className="About">
       <h2>About Me</h2>
       <p>
         I am a passionate web developer with a love for creating beautiful and
         functional websites.
       </p>
     </section>
-    <section className="section2Bg">
+    <section className="Projects">
       <h2>Projects</h2>
       <div className="project1">
         <h3>Project One</h3>
@@ -31,7 +31,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <p>An e-commerce site for selling products online.</p>
       </div>
     </section>
-    <section className="section3Bg">
+    <section className="Contact">
       <h2>Contact Me</h2>
       <p>You can reach me at example@email.com</p>
     </section>

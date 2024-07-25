@@ -11,8 +11,12 @@ import VikasDas from './vikasdas';
 // A component name should be written in PascalCase
 // This is App component
 function App() {
-  return <div className="box">Hello</div>
-  return <VikasDas />
+  return (
+  <div>
+    <div className="box">Hello</div>
+    <VikasDas />
+  </div>
+  );
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(

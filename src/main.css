@@ -1,8 +1,8 @@
 header {
-    text-align: center;
-    background-color: #f4f4f4;
-    padding: 20px;
-    border-bottom: 1px solid #ccc;
+  text-align: center;
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
 }
 .About {
   background-color: rgb(177, 227, 247);
@@ -18,17 +18,17 @@ header {
 }
 .project1 {
   border: 1px solid #ccc;
-  padding:10px;
+  padding: 10px;
   margin-bottom: 10px;
 }
 .project2 {
   border: 1px solid #ccc;
-  padding:10px;
+  padding: 10px;
   margin-bottom: 10px;
 }
 .project3 {
   border: 1px solid #ccc;
-  padding:10px;
+  padding: 10px;
   margin-bottom: 10px;
 }
 .Contact {
@@ -36,4 +36,4 @@ header {
   padding: 20px;
   margin: 15px;
   border: 1px solid #ccc;
-  
+}

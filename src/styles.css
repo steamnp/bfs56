@@ -1,20 +1,22 @@
-.Portfolio {
+body {
   font-family: sans-serif;
 }
-.Header {
+
+.header {
   text-align: center;
   border-bottom: 1px solid;
   padding: 10px;
   margin: 10px;
+  background-color: bisque;
 }
 
-.Name {
+.name {
   color: cadetblue;
   font-size: 45px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-.Intro {
+.intro {
   background-color: aquamarine;
   padding: 10px;
   margin: 20px;
@@ -23,7 +25,7 @@
   border: 1px solid;
 }
 
-.Project {
+.project {
   background-color: pink;
   padding: 10px;
   margin: 20px;
@@ -32,7 +34,7 @@
   border: 1px solid;
 }
 
-.Contact {
+.contact {
   background-color: lightblue;
   padding: 10px;
   margin: 20px;
@@ -41,7 +43,7 @@
   border: 1px solid;
 }
 
-.ProjectName {
+.projectName {
   border: 1px solid;
   padding-left: 5px;
   margin: 10px;

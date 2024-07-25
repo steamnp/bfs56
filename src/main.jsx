@@ -2,6 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./main.css";
 
+// block level element
+// inline element
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./main.css";
+
 // camelCase -> gorakhRajJoshi -> while creating javascript variable
 // PascalCase -> GorakhRajJoshi -> While creating component
 // kebab-case -> gorakh-raj-joshi -> While creating files or folders

@@ -8,6 +8,6 @@ import Gorakh from './gorakh'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Sandeeb age={31} favNumber={7} />
-    <Gorakh age={'hi'} />
+    <Gorakh age={10} />
   </React.StrictMode>
 )

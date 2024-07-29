@@ -4,6 +4,6 @@ import Manish from "./manish";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Manish />
+    <Manish age={25} favColor="red" favNum={44} />
   </React.StrictMode>
 );

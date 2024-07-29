@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Sandeeb from "./sandeeb";
+import Parent from "./parent";
 
 //console.log is for the debugging purpose
 //{age: 30, favNumber: 7} is the object in javascript, which can be excess by props
@@ -9,5 +10,6 @@ import Sandeeb from "./sandeeb";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Sandeeb age={30} favNumber={7} />
+    <Parent />
   </React.StrictMode>
 );

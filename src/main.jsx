@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Nima from "./nima";
+import Parent from "./parent";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Nima age={7} favNumber={10} />
+    <Parent />
   </React.StrictMode>
 );

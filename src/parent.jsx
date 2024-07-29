@@ -1,7 +1,10 @@
+import Child from "./child";
 function Parent() {
-  return <div>Parent</div>;
+  return (
+    <div>
+      <Child test="random" />
+    </div>
+  );
 }
 
 export default Parent;
-
-// rfce -> react functional component export

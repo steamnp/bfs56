@@ -5,6 +5,6 @@ import Amit from "./amit";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Amit />
+    <Amit age={23} favNumber={7} />
   </React.StrictMode>
 );

@@ -4,6 +4,6 @@ import Nima from "./nima";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Nima />
+    <Nima age={7} favNumber={10} />
   </React.StrictMode>
 );

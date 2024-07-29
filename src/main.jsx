@@ -1,11 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Ronisha from "./ronisha";
-
-//props are age, favNumber
+import Parent from "./parent";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Ronisha age={25} favNumber={13} />
+    {/*Rendering parent component*/}
+    <Parent />
   </React.StrictMode>
 );

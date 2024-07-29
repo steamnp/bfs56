@@ -1,10 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Lhakpa from "./lhakpa";
+import Parent from "./parent";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Lhakpa age={28} favNumber={5} />
+    <Parent />
   </React.StrictMode>
-);
 );

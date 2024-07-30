@@ -3,8 +3,7 @@ import Child from "./child";
 function Parent() {
   return (
     <div>
-      {" "}
-      <Child test="random" />{" "}
+      <Child test="random" />
     </div>
   );
 }

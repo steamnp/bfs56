@@ -3,7 +3,7 @@
 import styles from "../styles/child.module.css";
 
 function child({ test }) {
-  return <div className={styles.container}>child: {test}</div>;
+  return <div className="text-orange-950">child: {test}</div>;
 }
 
 export default child;

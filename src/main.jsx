@@ -1,9 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Parent from "./parent";
+import Parent from "./components/parent";
+import "./styles/index.css";
+import Home from "./pages/home";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Parent age={23} />
+    <Home />
   </React.StrictMode>
 );

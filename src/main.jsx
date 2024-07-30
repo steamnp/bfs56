@@ -1,12 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Sandeeb from "./sandeeb";
-
-// A component name should be written in PascalCase
-// This is App component
+import Jeneliya from "./componenets/jeneliya";
+import Parent from "./componenets/parent";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Sandeeb />
+    <Jeneliya age={26} favNumber={7} />
+    <Parent />
   </React.StrictMode>
 );

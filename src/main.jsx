@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Sandeeb from "./sandeeb";
-import Parent from "./parent";
+import Sandeeb from "./components/sandeeb";
+import Parent from "./components/parent";
 
 //console.log is for the debugging purpose
 //{age: 30, favNumber: 7} is the object in javascript, which can be excess by props

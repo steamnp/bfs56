@@ -1,13 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Sandeeb from './sandeeb'
-import Gorakh from './gorakh'
-
-// Props -> age, favNumber
+import Parent from './parent'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Sandeeb age={31} favNumber={7} />
-    <Gorakh age={10} />
+    {/* Rendering Parent component */}
+    <Parent age={10} favNumber={7} />
   </React.StrictMode>
 )

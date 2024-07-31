@@ -1,11 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Jeneliya from "./componenets/jeneliya";
-import Parent from "./componenets/parent";
+import Home from "./pages/home";
+import "./styles/input.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Jeneliya age={26} favNumber={7} />
-    <Parent />
+    <Home />
   </React.StrictMode>
 );

@@ -1,10 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Parent from "./components/parent";
-import "./styles/index.css";
+import App from "./app";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Parent age={10} />
+    <App />
   </React.StrictMode>
 );

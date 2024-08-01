@@ -1,14 +1,12 @@
-const myName = "Sandeeb";
-console.log(myName);
+//create a function (fuction declaration), use camelCase for function name
+//firstName and lastName are the function parameters
+function displayName(firstName, lastName) {
+  return firstName + lastName;
+}
 
-const student = {
-  firstName: "Sandeeb",
-  lastName: "Sandeeb",
-  age: 30,
-};
-
-console.log(student);
-console.log(typeof student);
+// call then function
+//Sandeeb and Adhikari are the function arguments
+console.log(displayName("Sandeeb", "Adhikari"));
 
 function App() {
   return <div>App</div>;

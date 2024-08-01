@@ -1,13 +1,15 @@
-function displayMyName(firstName, lastName) {
-  return firstName + " " + lastName;
-}
+const numbers = [12, 23, 32, 40]; // statement
 
-console.log(displayMyName("Jeneliya", "Gurung"));
-console.log(displayMyName("Gagan", "Dhillon"));
-console.log(displayMyName("Jeneliya", "Gurung"));
+numbers; //expression
 
 function App() {
-  return <h1>Hello</h1>;
+  return (
+    <h1>
+      {numbers.map(function (number) {
+        console.log(number); //will execute the function 4 times
+      })}
+    </h1>
+  );
 }
 
 export default App;

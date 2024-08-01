@@ -1,10 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Parent from "./parent";
+import App from "./app";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    {/*Rendering parent component*/}
-    <Parent />
+    <App />
   </React.StrictMode>
 );

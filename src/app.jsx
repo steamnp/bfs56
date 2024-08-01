@@ -1,44 +1,18 @@
-// const myName = 'Gorakh' // string
-// console.log(myName)
-// console.log(typeof myName)
+// whenever we are creating variable or function -> use camelCase convention
 
-// const favNum = 7 // number
-// console.log(favNum)
-// console.log(typeof favNum)
+// Create a function (function declaration)
+function displayMyName(firstName, lastName) {
+  // firstName, lastName are parameters (variables) of function displayMyName
+  return firstName + ' ' + lastName
+} // a machine
 
-// const numbers = [1, 2, 3, 4, 77] // object -> array
-// console.log(numbers)
-// console.log(typeof numbers)
-
-// const person = {
-//   firstName: 'Gorakh',
-//   middleName: 'Raj',
-//   lastName: 'Joshi',
-// } // object
-// console.log(person)
-// console.log(typeof person)
-
-// let randomNum
-// console.log(randomNum)
-// console.log(typeof randomNum)
-// randomNum = 11
-// console.log(randomNum)
-// console.log(typeof randomNum)
-// randomNum = 12
-// console.log(randomNum)
-// console.log(typeof randomNum)
-
-// const noValue = null
-// console.log(noValue)
-// console.log(typeof noValue)
-
-let test = 10
-test = '20'
-test = [10, 30, 40]
-console.log(test + 5)
+// Use (call, invokes) the function
+console.log(displayMyName('Gorakh', 'Joshi')) // Gorakh', 'Joshi' are function arguments (values)
+console.log(displayMyName('Alex', 'Mohrs'))
+console.log(displayMyName('Sandeeb', 'Adhikari'))
 
 function App() {
-  return <div>App</div>
+  return <div>{displayMyName('Sandeeb', 'Adhikari')}</div>
 }
 
 export default App

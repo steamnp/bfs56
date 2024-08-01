@@ -1,7 +1,13 @@
-import React from "react";
-
-function app() {
-  return <div>App</div>;
+function displayMyName(firstName, lastName) {
+  return firstName + " " + lastName;
 }
 
-export default app;
+console.log(displayMyName("Jeneliya", "Gurung"));
+console.log(displayMyName("Gagan", "Dhillon"));
+console.log(displayMyName("Jeneliya", "Gurung"));
+
+function App() {
+  return <h1>Hello</h1>;
+}
+
+export default App;

@@ -97,17 +97,18 @@ const person = {
   firstname: "Kin",
   lastName: "Birch",
 };
-let myNums = [1, 2, 5, 6, 7];
-const deleted = myNums.splice(2, 2, 2, 2, 10);
-console.log(deleted);
+let myNums = [1, 2, 34, 23, 45, 67, 3, 4, 7, 5, 6, 7];
+let spliced = myNums.splice(2, 4);
+spliced = myNums.splice(4, 1);
+spliced = myNums.splice(7, 0, 8, 9, 10);
 console.log(myNums);
 
 function App() {
   return (
     <div>
       <h2>My Arrays</h2>
-      <>Deleted Array: {deleted + " "}</>
-      <>myNums: {myNums + " "}</>
+      {/* <>Deleted Array: {deleted + " "}</>
+      <>myNums: {myNums + " "}</> */}
 
       {/* <ul>{sortedArr + " "}</ul> */}
       <h1>{/* {person.firstname} {""} {person.lastName} */}</h1>

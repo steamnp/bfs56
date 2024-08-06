@@ -6,6 +6,9 @@ export default {
       colors: {
         tomato: "#ff6347",
       },
+      fontFamily: {
+        redhat: ["Red Hat Text"],
+      },
     },
   },
   plugins: [],

@@ -1,8 +1,16 @@
-/** @type {import('tailwindcss').Config} */
-export default {
+const defaultTheme = require("tailwindcss/defaultTheme");
+
+module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        redText: "#C73B0F",
+      },
+      fontFamily: {
+        sans: ["Red Hat Text", ...defaultTheme.fontFamily.sans],
+      },
+    },
   },
   plugins: [],
 };

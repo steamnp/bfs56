@@ -1,4 +1,12 @@
+//Object Destrecturing
+import { useState } from "react";
+
 function Home() {
+  useState();
+
+  //Array Destructuring
+  const [name, setName] = useState("John Doe");
+
   return (
     <div className="m-6 font-redhat text-[40px] font-bold">
       <h1>Desserts</h1>

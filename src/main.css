@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+}
+
+.box {
+  background-color: red;
+  padding: 10px;
+  margin: 10px;
+  border: 2px solid black;
+}
+
+/* CSS Box Model */

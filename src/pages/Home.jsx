@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import Product from "../components/product";
 import data from "/data.json";
 

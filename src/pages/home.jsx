@@ -29,8 +29,8 @@ function Home() {
           price: "$ 6.50",
         }}
       />
-      <Product product={{ name: "A", category: "catA", price: 12 }} />
-      <Product product={{ name: "B", category: "catB", price: 12 }} />
+      {/* <Product product={{ name: "A", category: "catA", price: 12 }} />
+      <Product product={{ name: "B", category: "catB", price: 12 }} /> */}
     </div>
   );
 }

@@ -5,24 +5,28 @@ function Product({ product: { name, category, price } }) {
 
   return (
     <>
-      <img
-        className="w-[327px] h-[212px]"
-        src="assets/images/image-waffle-mobile.jpg"
-        alt="waffle on the table"
-      />
-      <div className="flex justify-center -mt-[22px] mb-[16px]">
-        <button
-          onClick={function () {
-            setCount(function (preValue) {
-              return preValue + 1;
-            });
-            console.log(count);
-          }}
-          className="border w-[160px] h-[40px] border-[#AD8A85] rounded-full px-7 py-3 bg-white"
-        >
-          {" "}
-          Add to Cart
-        </button>
+      <div className="w-[327px] h-[212px] mb-6">
+        <img
+          className="rounded-lg"
+          src="assets/images/image-waffle-mobile.jpg"
+          alt="waffle on the table"
+        />
+        <div className="flex justify-center -mt-[22px]">
+          <button
+            onClick={function () {
+              setCount(function (preValue) {
+                return preValue + 1;
+              });
+              console.log(count);
+            }}
+            className="border border-[#AD8A85] rounded-full px-7 py-3 bg-white"
+          >
+            <div className="flex justify-center">
+              <img src="assets/images/icon-add-to-cart.svg" alt="cart icon" />
+              <span> Add to Cart </span>
+            </div>
+          </button>
+        </div>
       </div>
       <p className="text-[#87635A] text-[14px]">{name}</p>
       <p className="font-semibold text-[16px]">{category}</p>

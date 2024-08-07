@@ -6,6 +6,9 @@ export default {
       fontFamily: {
         redhat: ["Red Hat Display"],
       },
+      colors: {
+        red: "#87635A",
+      },
     },
   },
   plugins: [],

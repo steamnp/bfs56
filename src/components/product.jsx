@@ -1,6 +1,6 @@
-// import cart from "/assets/images/icon-add-to-cart.svg";
+import cart from "/assets/images/icon-add-to-cart.svg";
 function product({ name, category, price, image }) {
-  console.log(image);
+  //const [isHovered, setIsHovered] = useState(false);
   return (
     <>
       <div className="mt-8 mb-6 flex flex-col">
@@ -11,21 +11,19 @@ function product({ name, category, price, image }) {
         />
         <div className="flex justify-center w-[327px] mt-[-22px]">
           <button
-            className="border border-[AD8A85] py-3 px-7 rounded-full flex items-center"
+            className="border border-buttonColor bg-white py-3 px-7 rounded-full flex items-center"
             onClick={function () {}}
           >
-            <img
-              src="assets/images/icon-add-to-cart.svg"
-              alt="Add to Cart"
-              className="w-5 h-4 mr-2"
-            />
-            <span className="text-[14px] text-blackishRed"> Add to Cart</span>
+            <img src={cart} alt="Add to Cart" className="w-5 h-4 mr-2" />
+            <span className="text-[14px] text-blackishRed hover:text-redColor">
+              Add to Cart
+            </span>
           </button>
         </div>
       </div>
       <div className=" mt-4">
         <p className="font-redhat text-[14px] text-lightRed">{category}</p>
-        <h1 className="font-redhat font-semibold text-[16px] text-blackishRed ">
+        <h1 className="font-redhat font-semibold text-[16px] text-blackishRed">
           {name}
         </h1>
         <h1 className="font-redhat font-semibold text-[16px] text-redColor">

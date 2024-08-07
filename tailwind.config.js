@@ -6,6 +6,7 @@ module.exports = {
     extend: {
       colors: {
         redText: "#C73B0F",
+        redFont: "#AD8A85",
       },
       fontFamily: {
         sans: ["Red Hat Text", ...defaultTheme.fontFamily.sans],

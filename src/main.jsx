@@ -5,7 +5,6 @@ import "./styles/index.css";
 import Home from "./pages/home";
 //rendering the Parent component
 ReactDOM.createRoot(document.getElementById("root")).render(
-ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Parent age={30} />
     <Home />

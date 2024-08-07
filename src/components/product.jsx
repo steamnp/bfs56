@@ -1,5 +1,6 @@
-import cart from "../assets/images/icon-add-to-cart.svg";
+// import cart from "/assets/images/icon-add-to-cart.svg";
 function product({ name, category, price, image }) {
+  console.log(image);
   return (
     <>
       <div className="mt-8 mb-6 flex flex-col">
@@ -13,7 +14,11 @@ function product({ name, category, price, image }) {
             className="border border-[AD8A85] py-3 px-7 rounded-full flex items-center"
             onClick={function () {}}
           >
-            <img src={cart} alt="Add to Cart" className="w-5 h-4 mr-2" />
+            <img
+              src="assets/images/icon-add-to-cart.svg"
+              alt="Add to Cart"
+              className="w-5 h-4 mr-2"
+            />
             <span className="text-[14px] text-blackishRed"> Add to Cart</span>
           </button>
         </div>

@@ -7,7 +7,9 @@ export default {
         redhat: ["Red Hat Display"],
       },
       colors: {
-        red: "#87635A",
+        lightRed: "#87635A",
+        blackishRed: "#260F08",
+        redColor: "#C73B0F",
       },
     },
   },

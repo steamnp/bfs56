@@ -2,7 +2,6 @@ import React from "react";
 import { useState } from "react";
 
 function Product({ product: { name, category, price } }) {
-  console.log(product);
   const [count, setCount] = useState();
   return (
     <>

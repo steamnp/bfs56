@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}", // Ensure all file types and paths are covered
     "./public/index.html", // Include paths to HTML files
@@ -7,11 +7,20 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        lime: {
-          700: "#00FF00",
-        },
+        red: "#C73BOF",
+        "rose-500": "#87635A",
+        "rose-900": "#260F08",
       },
     },
+    fontFamily: {
+      redhat: ["Red Hat Text"],
+    },
   },
-  plugins: [],
+  plugins: [
+    function ({ addBase, theme }) {
+      addBase({
+        html: { fontFamily: theme("fontFamily.redhat") },
+      });
+    },
+  ],
 };

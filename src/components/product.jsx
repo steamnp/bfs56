@@ -1,7 +1,7 @@
 import { useState } from "react";
 function Product({ product: { category, name, price } }) {
   const [state, setState] = useState();
-  console.log(category, name, price);
+  //   console.log(category, name, price);
 
   return (
     <div className="">
@@ -10,17 +10,17 @@ function Product({ product: { category, name, price } }) {
         src="/assets/images/image-waffle-mobile.jpg"
         alt="square waffles on a plate with strawberries as toppings "
       ></img>
-      <div className="flex justify-center">
-        <button className="border flex items-center gap-2 py-3 px-7 border-[#AD8A85] rounded-full">
+      <div className="flex justify-center my-[-22px]">
+        <button className="border flex items-center  py-3 px-7  border-[#AD8A85] rounded-full">
           <img
             className="w-[20px] h-[20px]"
-            src="public/assets/images/icon-add-to-cart.svg"
+            src="/assets/images/icon-add-to-cart.svg"
             alt="Add to cart icon"
           ></img>
-          Add to Cart
+          <span className="m-2">Add to Cart</span>
         </button>
       </div>
-      <div>
+      <div className="m-4">
         <h1>{category}</h1>
         <h1>{name}</h1>
         <h1>{price}</h1>

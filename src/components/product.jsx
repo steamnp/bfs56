@@ -1,13 +1,15 @@
 import { useState } from "react";
-function Product({ product: { category, name, price } }) {
+
+function Product({ item }) {
   const [state, setState] = useState();
-  //   console.log(category, name, price);
+  const { image, name, category, price } = item;
+  const { mobile } = image;
 
   return (
     <div className="">
       <img
         className="object-fill w-[327px] h-[212px]"
-        src="/assets/images/image-waffle-mobile.jpg"
+        src={mobile}
         alt="square waffles on a plate with strawberries as toppings "
       ></img>
       <div className="flex justify-center my-[-22px]">

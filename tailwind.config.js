@@ -6,20 +6,13 @@ module.exports = {
   ],
   theme: {
     extend: {},
-    fontFamily: {
-      redhat: ["Red Hat Text"],
-    },
     colors: {
       red: "#C73B0F",
       "rose-900": "#260F08",
       "rose-500": "#87635A",
+      "rose-400": "#AD8A85",
+      white: "#ffffff",
     },
   },
-  plugins: [
-    function ({ addBase, theme }) {
-      addBase({
-        html: { fontFamily: theme("fontFamily.theme") },
-      });
-    },
-  ],
+  plugins: [],
 };

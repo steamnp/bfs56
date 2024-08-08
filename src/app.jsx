@@ -1,5 +1,7 @@
-function App() {
-  return <div>App</div>
+import React from "react";
+
+function app() {
+  return <div>app</div>;
 }
 
-export default App
+export default app;

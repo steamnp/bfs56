@@ -4,10 +4,14 @@ import CheckOut from "./components/checkout";
 
 function app() {
   return (
-    <div className="grid gap-8 grid-cols-1 sm:grid-cols-[1fr_33%]">
-      <Home />
-      <CheckOut />
-    </div>
+    <>
+      <main className="container mx-auto px-4 pu-16">
+        <div className="grid gap-8 grid-cols-1 sm:grid-cols-[1fr_33%]">
+          <Home />
+          <CheckOut />
+        </div>
+      </main>
+    </>
   );
 }
 

@@ -1,9 +1,18 @@
+import React, { useState } from "react";
 import cart from "/assets/images/icon-add-to-cart.svg";
+import ButtonOnClick from "../components/buttonOnClick";
 //import { getImageURL } from "../utils/imageURL";
 
 function product({ item }) {
   const { image, name, category, price } = item;
   const { mobile, tablet, desktop } = image;
+
+  const [isActive, setIsActive] = useState(false);
+
+  const handleButtonClick = () => {
+    setIsActive(!isActive);
+  };
+
   return (
     <>
       <div className="mt-6 flex flex-col">
@@ -16,10 +25,16 @@ function product({ item }) {
             alt={`Image ${name}`}
           />
         </picture>
-        <button className="card-button">
-          <img src={cart} alt="Add to Cart" />
-          <span className="truncate">Add to Cart</span>
-        </button>
+
+        {isActive ? (
+          <ButtonOnClick />
+        ) : (
+          <button className="card-button" onClick={handleButtonClick}>
+            <img src={cart} alt="Add to Cart" />
+            <span className="truncate">Add to Cart</span>
+          </button>
+        )}
+
         <div className="card-description">
           <p className="">{category}</p>
           <p className="font-bold">{name}</p>

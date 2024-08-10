@@ -1,7 +1,7 @@
 import React from "react";
 import EmptyCartImg from "/assets/images/illustration-empty-cart.svg";
 
-function CheckOut() {
+function Cart() {
   return (
     <>
       <div className=" bg-white p-8 h-fit rounded-lg">
@@ -15,4 +15,4 @@ function CheckOut() {
   );
 }
 
-export default CheckOut;
+export default Cart;

@@ -16,19 +16,15 @@ function product({ item }) {
             alt={`Image ${name}`}
           />
         </picture>
-        <button className="card-button" onClick={function () {}}>
+        <button className="card-button">
           <img src={cart} alt="Add to Cart" />
           <span className="truncate">Add to Cart</span>
         </button>
-      </div>
-      <div className="mt-4">
-        <p className="font-redhat text-[14px] text-lightRed">{category}</p>
-        <h1 className="font-redhat font-semibold text-[16px] text-blackishRed">
-          {name}
-        </h1>
-        <h1 className="font-redhat font-semibold text-[16px] text-redColor">
-          ${price.toFixed(2)}
-        </h1>
+        <div className="card-description">
+          <p className="">{category}</p>
+          <p className="font-bold">{name}</p>
+          <p className="text-rose-700 font-semibold">${price.toFixed(2)}</p>
+        </div>
       </div>
     </>
   );

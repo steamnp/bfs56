@@ -6,11 +6,9 @@ function CheckOut() {
     <>
       <div className=" bg-white p-8 h-fit rounded-lg">
         <h2 className="text-primary">Your Cart(0)</h2>
-        <div className="flex flex-col items-center m-6">
-          <img src={EmptyCartImg} alt="Empty cart" />
-          <h3 className="font-redhat font-semibold text-[14px] text-lightRed my-4">
-            Your added items will appear here
-          </h3>
+        <div className="flex flex-col items-center mt-4">
+          <img src={EmptyCartImg} alt="No items in cart" />
+          <p>Your added items will appear here</p>
         </div>
       </div>
     </>

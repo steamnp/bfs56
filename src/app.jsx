@@ -1,6 +1,6 @@
 import React from "react";
 import Home from "./pages/Home";
-import CheckOut from "./components/checkout";
+import CheckOut from "./components/cart";
 
 function app() {
   return (

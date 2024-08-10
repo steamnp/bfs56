@@ -3,7 +3,7 @@ function product({ name, category, price, image }) {
   //const [isHovered, setIsHovered] = useState(false);
   return (
     <>
-      <div className="mt-8 mb-6 flex flex-col">
+      <div className="mt-6 flex flex-col">
         <img
           src={image.mobile}
           alt={name}
@@ -21,7 +21,7 @@ function product({ name, category, price, image }) {
           </button>
         </div>
       </div>
-      <div className=" mt-4">
+      <div className="mt-4">
         <p className="font-redhat text-[14px] text-lightRed">{category}</p>
         <h1 className="font-redhat font-semibold text-[16px] text-blackishRed">
           {name}

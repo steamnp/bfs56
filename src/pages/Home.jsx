@@ -1,9 +1,10 @@
 import Product from "../components/product";
+import CheckOut from "../components/checkout";
 import data from "/data.json";
 
 function Home() {
   return (
-    <div className="m-6 w-[375px]">
+    <div className="m-6 w-[375px] bg-redRose">
       <h1 className="font-bold text-[40px]">Desserts</h1>
       {data.map((item, index) => (
         <Product
@@ -14,6 +15,7 @@ function Home() {
           image={item.image}
         />
       ))}
+      <CheckOut />
     </div>
   );
 }

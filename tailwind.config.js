@@ -4,12 +4,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        lightRed: "#87635A",
-        blackishRed: "#260F08",
-        redColor: "#C73B0F",
-        buttonBorder: "#AD8A85",
-        white: "#FFFFFF",
-        redRose: "#FCF8F6",
+        primary: "hsl(14, 86%, 42%)",
+        secondary: "hsl(159, 69%, 38%)",
+        rose: {
+          50: "hsl(20, 50%, 98%)",
+          100: "hsl(13, 31%, 94%)",
+          300: "hsl(14, 25%, 72%)",
+          400: "hsl(7, 20%, 60%)",
+          500: "hsl(12, 20%, 44%)",
+          900: "hsl(14, 65%, 9%)",
+        },
       },
     },
   },

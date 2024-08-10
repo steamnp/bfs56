@@ -1,25 +1,25 @@
 import cart from "/assets/images/icon-add-to-cart.svg";
-function product({ name, category, price, image }) {
-  //const [isHovered, setIsHovered] = useState(false);
+//import { getImageURL } from "../utils/imageURL";
+
+function product({ item }) {
+  const { image, name, category, price } = item;
+  const { mobile, tablet, desktop } = image;
   return (
     <>
       <div className="mt-6 flex flex-col">
-        <img
-          src={image.mobile}
-          alt={name}
-          className="w-[327px] h-[212px] rounded-lg"
-        />
-        <div className="flex justify-center w-[327px] mt-[-22px]">
-          <button
-            className="border border-buttonColor bg-white py-3 px-7 rounded-full flex items-center"
-            onClick={function () {}}
-          >
-            <img src={cart} alt="Add to Cart" className="w-5 h-4 mr-2" />
-            <span className="text-[14px] text-blackishRed hover:text-redColor">
-              Add to Cart
-            </span>
-          </button>
-        </div>
+        <picture>
+          <source media="(width < 640px)" srcSet={mobile} />
+          <source media="(width < 768px)" srcSet={tablet} />
+          <img
+            className="card-image rounded-2xl"
+            src={desktop}
+            alt={`Image ${name}`}
+          />
+        </picture>
+        <button className="card-button" onClick={function () {}}>
+          <img src={cart} alt="Add to Cart" />
+          <span className="truncate">Add to Cart</span>
+        </button>
       </div>
       <div className="mt-4">
         <p className="font-redhat text-[14px] text-lightRed">{category}</p>

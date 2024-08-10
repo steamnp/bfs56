@@ -11,6 +11,7 @@ module.exports = {
       "rose-900": "#260F08",
       "rose-500": "#87635A",
       "rose-400": "#AD8A85",
+      "rose-50": "#FCF8F6",
       white: "#ffffff",
     },
   },

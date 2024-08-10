@@ -5,17 +5,36 @@ import Cart from "./cart";
 function Product() {
   const [cartItems, setCartItems] = useState([]);
 
+  const generateUniqueId = (product) => {
+    return `${product.name}-${product.price}`;
+  };
+
   const handleAddToCart = (product) => {
+    const productWithId = { ...product, id: generateUniqueId(product) };
+    console.log("Adding to cart:", productWithId);
+
     setCartItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === product.id);
-      if (existingItem) {
-        return prevItems.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
+      console.log("Previous items:", prevItems);
+
+      const existingItemIndex = prevItems.findIndex(
+        (item) => item.id === productWithId.id
+      );
+      console.log("Existing item index:", existingItemIndex);
+
+      if (existingItemIndex !== -1) {
+        // Update the quantity of the existing item
+        const updatedItems = prevItems.map((item, index) =>
+          index === existingItemIndex
+            ? { ...item, quantity: (item.quantity || 1) + 1 }
             : item
         );
+        console.log("Updated items:", updatedItems);
+        return updatedItems;
       } else {
-        return [...prevItems, { ...product, quantity: 1 }];
+        // Add the new item with quantity 1
+        const newItems = [...prevItems, { ...productWithId, quantity: 1 }];
+        console.log("New items:", newItems);
+        return newItems;
       }
     });
   };
@@ -42,9 +61,9 @@ function Product() {
               Add to Cart
             </button>
           </div>
-          <p className="text-rose-500 text-sm">{product.name}</p>
+          <p className="text-rose-500 text-sm">{product.category}</p>
           <p className="text-rose-900 my-1 text-base font-semibold">
-            {product.category}
+            {product.name}
           </p>
           <p className="text-red text-base font-semibold">${product.price}</p>
         </div>

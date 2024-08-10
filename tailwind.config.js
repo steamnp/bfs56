@@ -9,6 +9,7 @@ export default {
         redColor: "#C73B0F",
         buttonBorder: "#AD8A85",
         white: "#FFFFFF",
+        redRose: "#FCF8F6",
       },
     },
   },

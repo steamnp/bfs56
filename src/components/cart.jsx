@@ -30,8 +30,8 @@ function Cart({ cartItems }) {
   }, [isOrderConfirmationVisible]);
 
   return (
-    <div className="relative p-6 w-[327px] bg-white rounded-lg shadow-md">
-      <h1 className="text-red font-bold text-[24px] mb-4">
+    <div className="relative p-6 bg-white rounded-lg shadow-md max-w-[327px] mx-auto sm:max-w-full">
+      <h1 className="text-red font-bold text-xl mb-4">
         Your Cart ({cartItems.length})
       </h1>
 
@@ -51,8 +51,13 @@ function Cart({ cartItems }) {
           {cartItems.map((item) => (
             <div
               key={`${item.name}-${item.price}`}
-              className="flex items-center mb-4"
+              className="flex items-center mb-4 gap-4"
             >
+              <img
+                src={item.image.mobile} // Ensure the image path is correct
+                alt={item.name}
+                className="w-16 h-16 object-cover rounded-md"
+              />
               <div className="flex-1">
                 <p className="text-rose-900 text-sm">{item.name}</p>
                 <p className="text-rose-500 pt-2">
@@ -64,27 +69,27 @@ function Cart({ cartItems }) {
               <img
                 src="assets/images/icon-remove-item.svg"
                 alt="Remove item"
-                className="ml-auto cursor-pointer"
+                className="cursor-pointer"
               />
             </div>
           ))}
-          <div className="flex justify-between mt-4">
-            <p className="font-bold">Order Total:</p>
-            <p className="font-bold">${totalPrice.toFixed(2)}</p>
+          <div className="flex justify-between mt-4 text-lg font-bold">
+            <p>Order Total:</p>
+            <p>${totalPrice.toFixed(2)}</p>
           </div>
           <div className="flex mt-4 w-full rounded-lg shadow-md bg-rose-50">
             <img
-              className="pl-6 p-0.5"
+              className="pl-4 py-2"
               src="assets/images/icon-carbon-neutral.svg"
               alt="icon-carbon-neutral"
             />
-            <p className="flex py-4 text-rose-900 flex-1">
+            <p className="flex py-2 text-rose-900 flex-1">
               This is a carbon-neutral delivery
             </p>
           </div>
           <div className="flex justify-center mt-6">
             <button
-              className="font-redhat font-semibold border rounded-full py-4 px-20 bg-red text-white"
+              className="font-redhat font-semibold border rounded-full py-3 px-10 bg-red text-white"
               onClick={handleConfirmOrder}
             >
               Confirm Order
@@ -93,18 +98,18 @@ function Cart({ cartItems }) {
 
           {/* Conditional rendering of OrderConfirmation */}
           <div
-            className={`order-confirmation fixed bottom-0 left-0 w-[350px] bg-white shadow-lg rounded-t-lg transition-transform duration-500 ease-in-out transform ${
+            className={`order-confirmation fixed bottom-0 left-0 w-full max-w-md bg-white shadow-lg rounded-t-lg transition-transform duration-500 ease-in-out transform ${
               isOrderConfirmationVisible ? "translate-y-0" : "translate-y-full"
-            } mx-auto`}
+            }`}
           >
             <div className="relative w-full rounded-lg shadow-md">
               <button
-                className="absolute top-3 right-3 text-red-500"
+                className="absolute top-3 right-3 text-red-500 text-xl"
                 onClick={handleCloseModal}
               >
                 &times;
               </button>
-              <h1 className="text-red font-bold text-xl p-6">
+              <h1 className="text-red font-bold text-lg p-6">
                 Order <br /> Confirmed
               </h1>
               <p className="text-rose-500 pl-6 mb-6">
@@ -114,7 +119,7 @@ function Cart({ cartItems }) {
               {cartItems.map((item) => (
                 <div
                   key={`${item.name}-${item.price}`}
-                  className="w-[300px] bg-grey-100 p-4 ml-6 rounded-lg"
+                  className="w-full bg-grey-100 p-4 mb-4 rounded-lg"
                 >
                   <div className="flex items-center">
                     <img
@@ -132,14 +137,14 @@ function Cart({ cartItems }) {
                 </div>
               ))}
 
-              <div className="flex justify-between mt-4 mx-8">
-                <p>Order Total:</p>
+              <div className="flex justify-between mt-4 mx-6">
+                <p className="font-bold">Order Total:</p>
                 <p>${totalPrice.toFixed(2)}</p>
               </div>
 
-              <div className="flex justify-center mt-6">
+              <div className="flex justify-center mt-6 mb-4">
                 <button
-                  className="font-redhat font-semibold border rounded-full py-2 px-10 mb-4 bg-red text-white"
+                  className="font-redhat font-semibold border rounded-full py-2 px-10 bg-red text-white"
                   onClick={handleCloseModal}
                 >
                   Start New Order

@@ -1,14 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import productData from "../data.json";
-import Cart from "./cart";
 
-function Product() {
-  const [cartItems, setCartItems] = useState([]);
-  const [clickedProduct, setClickedProduct] = useState(null);
-
+function Product({ cartItems, setCartItems }) {
   const handleAddToCart = (product) => {
-    setClickedProduct(product);
-
     setCartItems((prevItems) => {
       const existingItem = prevItems.find(
         (item) => item.name === product.name && item.price === product.price
@@ -26,94 +20,39 @@ function Product() {
     });
   };
 
-  const handleRemoveFromCart = (product) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find(
-        (item) => item.name === product.name && item.price === product.price
-      );
-
-      if (existingItem && existingItem.quantity > 0) {
-        return prevItems.map((item) =>
-          item.name === product.name && item.price === product.price
-            ? { ...item, quantity: Math.max(0, item.quantity - 1) }
-            : item
-        );
-      } else {
-        return prevItems;
-      }
-    });
-  };
-
   return (
-    <>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {productData.map((product, index) => (
-        <div key={index} className="mb-6">
+        <div
+          key={index}
+          className="flex flex-col items-center bg-white p-4 rounded-lg shadow-md"
+        >
           <img
-            className="w-[327px] h-[234px] rounded-lg"
+            className="w-full h-auto rounded-lg mb-4"
             src={product.image.mobile}
-            alt="product"
+            alt={product.name}
           />
-          <div className="flex justify-center mx-auto">
+          <div className="text-center">
+            <p className="text-rose-500 text-sm">{product.category}</p>
+            <p className="text-rose-900 my-1 text-base font-semibold">
+              {product.name}
+            </p>
+            <p className="text-red text-base font-semibold">${product.price}</p>
             <button
-              className={`relative flex items-center border rounded-full py-3 px-7 -mt-6 mr-14 border-rose-400 ${
-                clickedProduct && clickedProduct.name === product.name
-                  ? "bg-red text-white"
-                  : "bg-white"
-              }`}
+              className="mt-4 flex items-center border rounded-full py-3 px-7 bg-white border-rose-400"
               onClick={() => handleAddToCart(product)}
             >
-              {clickedProduct && clickedProduct.name === product.name && (
-                <div className="flex items-center">
-                  <span
-                    className="flex items-center justify-center border rounded-full text-white w-4 h-4 cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemoveFromCart(product);
-                    }}
-                  >
-                    -
-                  </span>
-                  <span className="text-white px-9">
-                    {cartItems.find(
-                      (item) =>
-                        item.name === product.name &&
-                        item.price === product.price
-                    )?.quantity || 1}
-                  </span>
-                  <span
-                    className="flex items-center justify-center border rounded-full text-white w-4 h-4 cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddToCart(product);
-                    }}
-                  >
-                    +
-                  </span>
-                </div>
-              )}
-              {!clickedProduct || clickedProduct.name !== product.name ? (
-                <>
-                  <img
-                    src="assets/images/icon-add-to-cart.svg"
-                    alt="add-to-cart"
-                    className="pr-1"
-                  />
-                  Add to Cart
-                </>
-              ) : (
-                ""
-              )}
+              <img
+                src="assets/images/icon-add-to-cart.svg"
+                alt="add-to-cart"
+                className="pr-1"
+              />
+              Add to Cart
             </button>
           </div>
-          <p className="text-rose-500 text-sm">{product.category}</p>
-          <p className="text-rose-900 my-1 text-base font-semibold">
-            {product.name}
-          </p>
-          <p className="text-red text-base font-semibold">${product.price}</p>
         </div>
       ))}
-      <Cart cartItems={cartItems} />
-    </>
+    </div>
   );
 }
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Product from "./components/product";
+import Cart from "./components/cart";
 import data from "../data.json";
 
 function Home() {
@@ -12,6 +13,7 @@ function Home() {
         {data.map((item, i) => {
           return <Product key={i} item={item} />;
         })}
+        <Cart />
       </div>
     </>
   );

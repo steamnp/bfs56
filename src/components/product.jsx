@@ -10,7 +10,7 @@ function Product({ item }) {
     return image;
   };
   return (
-    <div className="card mb-0">
+    <div className="card mb-4">
       <picture>
         <source media="(width < 640px)" srcSet={cleanImageUrl(mobile)} />
         <source media="(width < 768px)" srcSet={cleanImageUrl(tablet)} />
@@ -32,7 +32,7 @@ function Product({ item }) {
           </span>
         </button>
       </div>
-      <div className="card-description">
+      <div className="card-description mt-4">
         <p className="font-[14px] text-rose-400">{category}</p>
         <p className=" font-[16px] text-rose-900">{name}</p>
         <p className="font-bold  text-red-700">{"$ " + price.toPrecision(3)}</p>

@@ -20,7 +20,7 @@ function Home() {
   //console.log(useState()); //useState is a function
   //console.log(count);
   return (
-    <div className="m-6 w-[375px]">
+    <div className="m-6 w-[375px] ">
       <h1 className="font-bold mb-[32px] text -[40px]">Dessert</h1>
       <Product
         product={{

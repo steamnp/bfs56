@@ -2,10 +2,10 @@ import { useState } from "react";
 
 function Product({ product: { name, category, price } }) {
   const [count, setCount] = useState();
-
+  // preValue = 0;
   return (
     <>
-      <div className="w-[327px] h-[212px] mb-6">
+      <div className="w-[327px] h-[234px] mb-4">
         <img
           className="rounded-lg"
           src="assets/images/image-waffle-mobile.jpg"
@@ -28,6 +28,7 @@ function Product({ product: { name, category, price } }) {
           </button>
         </div>
       </div>
+
       <p className="text-[#87635A] text-[14px]">{name}</p>
       <p className="font-semibold text-[16px]">{category}</p>
       <p className="text-[#C73B0F] font-semibold text-[16px]">{price}</p>

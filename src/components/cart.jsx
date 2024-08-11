@@ -1,19 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 function Cart({ cartItems }) {
+  const [isOrderConfirmationVisible, setOrderConfirmationVisible] =
+    useState(false);
+
+  // Function to handle button click
+  const handleConfirmOrder = () => {
+    setOrderConfirmationVisible(true);
+  };
+
+  // Function to close the OrderConfirmation modal
+  const handleCloseModal = () => {
+    setOrderConfirmationVisible(false);
+  };
+
   // Calculate the total price
   const totalPrice = cartItems.reduce((total, item) => {
     return total + item.price * item.quantity;
   }, 0);
 
+  // Add a delay for the transition to be applied correctly
+  useEffect(() => {
+    if (!isOrderConfirmationVisible) return;
+    const timer = setTimeout(() => {
+      document.querySelector(".order-confirmation").classList.add("show");
+    }, 10); // short delay to ensure transition applies
+
+    return () => clearTimeout(timer);
+  }, [isOrderConfirmationVisible]);
+
   return (
-    <div className="p-6 w-[327px] bg-white rounded-lg shadow-md">
+    <div className="relative p-6 w-[327px] bg-white rounded-lg shadow-md">
       <h1 className="text-red font-bold text-[24px] mb-4">
         Your Cart ({cartItems.length})
       </h1>
 
       {cartItems.length === 0 ? (
-        // Show only the empty cart image and item count
         <>
           <img
             src="assets/images/illustration-empty-cart.svg"
@@ -61,9 +83,69 @@ function Cart({ cartItems }) {
             </p>
           </div>
           <div className="flex justify-center mt-6">
-            <button className="font-redhat font-semibold border rounded-full py-4 px-20 bg-red text-white">
+            <button
+              className="font-redhat font-semibold border rounded-full py-4 px-20 bg-red text-white"
+              onClick={handleConfirmOrder}
+            >
               Confirm Order
             </button>
+          </div>
+
+          {/* Conditional rendering of OrderConfirmation */}
+          <div
+            className={`order-confirmation fixed bottom-0 left-0 w-[350px] bg-white shadow-lg rounded-t-lg transition-transform duration-500 ease-in-out transform ${
+              isOrderConfirmationVisible ? "translate-y-0" : "translate-y-full"
+            } mx-auto`}
+          >
+            <div className="relative w-full rounded-lg shadow-md">
+              <button
+                className="absolute top-3 right-3 text-red-500"
+                onClick={handleCloseModal}
+              >
+                &times;
+              </button>
+              <h1 className="text-red font-bold text-xl p-6">
+                Order <br /> Confirmed
+              </h1>
+              <p className="text-rose-500 pl-6 mb-6">
+                We hope you enjoy your food!
+              </p>
+
+              {cartItems.map((item) => (
+                <div
+                  key={`${item.name}-${item.price}`}
+                  className="w-[300px] bg-grey-100 p-4 ml-6 rounded-lg"
+                >
+                  <div className="flex items-center">
+                    <img
+                      src={item.image.mobile} // Dynamically use the item's image URL
+                      alt={item.name}
+                      className="w-12 h-12 object-cover rounded-md mr-4"
+                    />
+                    <div className="flex-1">
+                      <p className="text-rose-900 font-semibold">{item.name}</p>
+                      <p className="text-rose-500">
+                        {item.quantity}x @ ${item.price.toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              <div className="flex justify-between mt-4 mx-8">
+                <p>Order Total:</p>
+                <p>${totalPrice.toFixed(2)}</p>
+              </div>
+
+              <div className="flex justify-center mt-6">
+                <button
+                  className="font-redhat font-semibold border rounded-full py-2 px-10 mb-4 bg-red text-white"
+                  onClick={handleCloseModal}
+                >
+                  Start New Order
+                </button>
+              </div>
+            </div>
           </div>
         </>
       )}

@@ -1,29 +1,18 @@
 import React from "react";
 
 function Cart({ cartItems }) {
-  // Group items by their unique ID and sum their quantities
-  const groupedItems = cartItems.reduce((acc, item) => {
-    const existingItem = acc.find((i) => i.id === item.id);
-    if (existingItem) {
-      existingItem.quantity += item.quantity;
-    } else {
-      acc.push({ ...item, quantity: item.quantity || 1 });
-    }
-    return acc;
-  }, []);
-
   // Calculate the total price
-  const totalPrice = groupedItems.reduce((total, item) => {
+  const totalPrice = cartItems.reduce((total, item) => {
     return total + item.price * item.quantity;
   }, 0);
 
   return (
     <div className="p-6 w-[327px] bg-white rounded-lg shadow-md">
       <h1 className="text-red font-bold text-[24px] mb-4">
-        Your Cart ({groupedItems.length})
+        Your Cart ({cartItems.length})
       </h1>
 
-      {groupedItems.length === 0 ? (
+      {cartItems.length === 0 ? (
         // Show only the empty cart image and item count
         <>
           <img
@@ -37,8 +26,11 @@ function Cart({ cartItems }) {
         </>
       ) : (
         <>
-          {groupedItems.map((item) => (
-            <div key={item.id} className="flex items-center mb-4">
+          {cartItems.map((item) => (
+            <div
+              key={`${item.name}-${item.price}`}
+              className="flex items-center mb-4"
+            >
               <div className="flex-1">
                 <p className="text-rose-900 text-sm">{item.name}</p>
                 <p className="text-rose-500 pt-2">

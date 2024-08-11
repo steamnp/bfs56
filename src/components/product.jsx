@@ -4,37 +4,42 @@ import Cart from "./cart";
 
 function Product() {
   const [cartItems, setCartItems] = useState([]);
-
-  const generateUniqueId = (product) => {
-    return `${product.name}-${product.price}`;
-  };
+  const [clickedProduct, setClickedProduct] = useState(null);
 
   const handleAddToCart = (product) => {
-    const productWithId = { ...product, id: generateUniqueId(product) };
-    console.log("Adding to cart:", productWithId);
+    setClickedProduct(product);
 
     setCartItems((prevItems) => {
-      console.log("Previous items:", prevItems);
-
-      const existingItemIndex = prevItems.findIndex(
-        (item) => item.id === productWithId.id
+      const existingItem = prevItems.find(
+        (item) => item.name === product.name && item.price === product.price
       );
-      console.log("Existing item index:", existingItemIndex);
 
-      if (existingItemIndex !== -1) {
-        // Update the quantity of the existing item
-        const updatedItems = prevItems.map((item, index) =>
-          index === existingItemIndex
-            ? { ...item, quantity: (item.quantity || 1) + 1 }
+      if (existingItem) {
+        return prevItems.map((item) =>
+          item.name === product.name && item.price === product.price
+            ? { ...item, quantity: item.quantity + 1 }
             : item
         );
-        console.log("Updated items:", updatedItems);
-        return updatedItems;
       } else {
-        // Add the new item with quantity 1
-        const newItems = [...prevItems, { ...productWithId, quantity: 1 }];
-        console.log("New items:", newItems);
-        return newItems;
+        return [...prevItems, { ...product, quantity: 1 }];
+      }
+    });
+  };
+
+  const handleRemoveFromCart = (product) => {
+    setCartItems((prevItems) => {
+      const existingItem = prevItems.find(
+        (item) => item.name === product.name && item.price === product.price
+      );
+
+      if (existingItem && existingItem.quantity > 0) {
+        return prevItems.map((item) =>
+          item.name === product.name && item.price === product.price
+            ? { ...item, quantity: Math.max(0, item.quantity - 1) }
+            : item
+        );
+      } else {
+        return prevItems;
       }
     });
   };
@@ -50,15 +55,54 @@ function Product() {
           />
           <div className="flex justify-center mx-auto">
             <button
-              className="flex items-center border rounded-full py-3 px-7 bg-white -mt-6 mr-14 border-rose-400"
+              className={`relative flex items-center border rounded-full py-3 px-7 -mt-6 mr-14 border-rose-400 ${
+                clickedProduct && clickedProduct.name === product.name
+                  ? "bg-red text-white"
+                  : "bg-white"
+              }`}
               onClick={() => handleAddToCart(product)}
             >
-              <img
-                src="assets/images/icon-add-to-cart.svg"
-                alt="add-to-cart"
-                className="pr-1"
-              />
-              Add to Cart
+              {clickedProduct && clickedProduct.name === product.name && (
+                <div className="flex items-center">
+                  <span
+                    className="flex items-center justify-center border rounded-full text-white w-4 h-4 cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveFromCart(product);
+                    }}
+                  >
+                    -
+                  </span>
+                  <span className="text-white px-9">
+                    {cartItems.find(
+                      (item) =>
+                        item.name === product.name &&
+                        item.price === product.price
+                    )?.quantity || 1}
+                  </span>
+                  <span
+                    className="flex items-center justify-center border rounded-full text-white w-4 h-4 cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(product);
+                    }}
+                  >
+                    +
+                  </span>
+                </div>
+              )}
+              {!clickedProduct || clickedProduct.name !== product.name ? (
+                <>
+                  <img
+                    src="assets/images/icon-add-to-cart.svg"
+                    alt="add-to-cart"
+                    className="pr-1"
+                  />
+                  Add to Cart
+                </>
+              ) : (
+                ""
+              )}
             </button>
           </div>
           <p className="text-rose-500 text-sm">{product.category}</p>

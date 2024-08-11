@@ -7,7 +7,7 @@ function Product({ item }) {
   const { desktop, mobile, tablet, thumbnail } = image;
 
   const cleanImageUrl = (image) => {
-    return image.replace("./", "./");
+    return image;
   };
   return (
     <div className="card mb-0">
@@ -35,7 +35,7 @@ function Product({ item }) {
       <div className="card-description">
         <p className="font-[14px] text-rose-400">{category}</p>
         <p className=" font-[16px] text-rose-900">{name}</p>
-        <p className="font-bold  text-red-700">{"$ " + price}</p>
+        <p className="font-bold  text-red-700">{"$ " + price.toPrecision(3)}</p>
       </div>
     </div>
   );

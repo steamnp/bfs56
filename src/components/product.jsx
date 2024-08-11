@@ -33,9 +33,9 @@ function Product({ item }) {
         </button>
       </div>
       <div className="card-description">
-        <h1>{category}</h1>
-        <h1>{name}</h1>
-        <h1>{price}</h1>
+        <p className="font-[14px] text-rose-400">{category}</p>
+        <p className=" font-[16px] text-rose-900">{name}</p>
+        <p className="font-bold  text-red-700">{"$ " + price}</p>
       </div>
     </div>
   );

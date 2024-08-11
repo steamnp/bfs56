@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import React from "react";
-import Home from "./pages/home";
+import App from "./app";
 //import Product from "./components/product";
 
 //console.log(React); //react is object
@@ -14,7 +14,7 @@ import Home from "./pages/home";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Home />
+    <App />
   </React.StrictMode>
 );
 

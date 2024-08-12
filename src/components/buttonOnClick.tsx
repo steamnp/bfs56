@@ -1,6 +1,6 @@
 import React from "react";
-import SubtractIcon from "../components/subtractIcon";
-import AddIcon from "../components/addIcon";
+import SubtractIcon from "./subtractIcon";
+import AddIcon from "./addIcon";
 
 const ButtonOnClick = () => {
   return (

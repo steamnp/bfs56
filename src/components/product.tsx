@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import cart from "/assets/images/icon-add-to-cart.svg";
-import ButtonOnClick from "../components/buttonOnClick";
+import ButtonOnClick from "./buttonOnClick";
 //import { getImageURL } from "../utils/imageURL";
 
 function product({ item }) {

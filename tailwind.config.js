@@ -6,7 +6,8 @@ module.exports = {
     extend: {
       colors: {
         redText: "#C73B0F",
-        redFont: "#AD8A85",
+        buttonBorderColor: "#AD8A85",
+        categoryColor: "#87635A",
       },
     },
   },

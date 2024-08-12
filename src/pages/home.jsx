@@ -1,16 +1,13 @@
-import React from "react";
-import ItemCard from "../components/itemCard";
-import productData from "../../data.json";
+import ListItem from "../components/list-item";
 
 function Home() {
-  console.log(React);
   return (
-    <div className="m-6 w-[375px]">
-      <h1 className="text-[40px] font-bold mb-[32px]">Dessert</h1>
-      {productData.map((product, index) => (
-        <ItemCard key={index} product={product} />
-      ))}
-    </div>
+    <>
+      <main className="m-6 sm:m-10 md:mx-28 md:my-22">
+        <h1 className="text-2xl font-bold mb-8">Desserts</h1>
+        <ListItem />
+      </main>
+    </>
   );
 }
 

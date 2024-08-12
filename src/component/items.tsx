@@ -9,9 +9,13 @@ function Items({ product }) {
           <source media="(min-width: 640px)" srcSet={tablet} />
           <img className="rounded-lg w-full" src={mobile} alt={name} />
         </picture>
-        <button className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 flex py-3 px-6 border-2 rounded-full bg-white shadow-m hover:border-buttonBorderColor hover:text-redText">
-          <img src="/assets/images/icon-add-to-cart.svg" alt="cart" />
-          <span className="font-semibold text-sm pl-2  ">Add to Cart</span>
+        <button className="absolute bottom-0 justify-center items-center w-[160px] left-1/2 transform -translate-x-1/2 translate-y-1/2 flex py-3 px-6 border-2 rounded-full bg-white shadow-md hover:border-buttonBorderColor hover:text-redText">
+          <img
+            src="/assets/images/icon-add-to-cart.svg"
+            className=""
+            alt="cart"
+          />
+          <span className="font-semibold text-sm">Add to Cart</span>
         </button>
       </div>
       <div className="mt-10">

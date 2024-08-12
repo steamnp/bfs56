@@ -12,7 +12,7 @@ function Home() {
         <Product cartItems={cartItems} setCartItems={setCartItems} />
       </div>
       <div className="lg:w-[327px]">
-        <Cart cartItems={cartItems} />
+        <Cart cartItems={cartItems} setCartItems={setCartItems} />
       </div>
     </div>
   );

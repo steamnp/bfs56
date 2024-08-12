@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import React from "react";
-import App from "./app";
+import App from "./App";
 //import Product from "./components/product";
 
 //console.log(React); //react is object

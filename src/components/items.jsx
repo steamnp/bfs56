@@ -10,10 +10,7 @@ function Items({ product }) {
           <img className="rounded-lg w-full" src={mobile} alt={name} />
         </picture>
         <button className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 flex py-3 px-6 border-2 rounded-full bg-white shadow-md">
-          <img
-            src="../../public/assets/images/icon-add-to-cart.svg"
-            alt="cart"
-          />
+          <img src="/assets/images/icon-add-to-cart.svg" alt="cart" />
           <span className="font-semibold text-sm pl-2 hover:text-redText ">
             Add to Cart
           </span>

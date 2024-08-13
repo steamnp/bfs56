@@ -1,17 +1,18 @@
-import React, { useState } from 'react'
-import cart from '/assets/images/icon-add-to-cart.svg'
-import ButtonOnClick from './buttonOnClick'
+import { useState } from "react";
+import cart from "/assets/images/icon-add-to-cart.svg";
+import ButtonOnClick from "./buttonOnClick";
+import { IProduct } from "../types/product";
 //import { getImageURL } from "../utils/imageURL";
 
-function product({ item }) {
-  const { image, name, category, price } = item
-  const { mobile, tablet, desktop } = image
+function product({ item }: { item: IProduct }) {
+  const { image, name, category, price } = item;
+  const { mobile, tablet, desktop } = image;
 
-  const [isActive, setIsActive] = useState(false)
+  const [isActive, setIsActive] = useState(false);
 
   const handleButtonClick = () => {
-    setIsActive(!isActive)
-  }
+    setIsActive(!isActive);
+  };
 
   return (
     <>
@@ -19,7 +20,11 @@ function product({ item }) {
         <picture>
           <source media="(width < 640px)" srcSet={mobile} />
           <source media="(width < 768px)" srcSet={tablet} />
-          <img className="card-image rounded-2xl" src={desktop} alt={`Image ${name}`} />
+          <img
+            className="card-image rounded-2xl"
+            src={desktop}
+            alt={`Image ${name}`}
+          />
         </picture>
 
         {isActive ? (
@@ -38,7 +43,7 @@ function product({ item }) {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default product
+export default product;

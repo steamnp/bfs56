@@ -1,5 +1,5 @@
 import Product from "../components/product";
-import data from "/data.json";
+import data from "../../data.json";
 
 function Home() {
   return (

@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Red Hat Text";
+  src: url(/assets/fonts/static/RedHatText-Regular.ttf);
+}
+
+:root {
+  font-family: "Red Hat Text", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+}

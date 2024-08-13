@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import cart from '/assets/images/icon-add-to-cart.svg'
 import ButtonOnClick from './buttonOnClick'
+import { IItem } from '../types/product'
+
 //import { getImageURL } from "../utils/imageURL";
 
-function product({ item }) {
+function product({ item }: IItem) {
   const { image, name, category, price } = item
   const { mobile, tablet, desktop } = image
 

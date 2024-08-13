@@ -12,6 +12,8 @@ function Product({ name, category, price, image }) {
           <h1 className="text-[14px]">Add to Cart</h1>
         </button>
       </div>
+
+      {/* need to fix CSS in this div */}
       <div>
         <h1 className="text-[14px] text-[#87635A] font-redhat">{category}</h1>
         <h1 className="text-[16px] font-redhat text-[#260F08] font-semibold">

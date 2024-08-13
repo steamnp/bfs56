@@ -1,5 +1,6 @@
 import Product from "../components/product";
 import data from "../../data.json";
+import Cart from "../components/cart";
 
 function Home() {
   return (
@@ -15,6 +16,9 @@ function Home() {
             image={item.image}
           />
         ))}
+      </div>
+      <div>
+        <Cart />
       </div>
     </div>
   );

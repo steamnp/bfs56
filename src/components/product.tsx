@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { IItem } from "./types/item";
 import data from "/Users/manish/BF556FRONTED/viteapp1/data.json";
 
-function Product({ item }) {
+function Product({ item }: IItem) {
   const [state, setState] = useState();
   const { image, name, category, price } = item;
   const { desktop, mobile, tablet, thumbnail } = image;

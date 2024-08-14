@@ -1,7 +1,7 @@
-import Home from "./pages/Home";
-import Cart from "./components/cart";
+import Home from './pages/Home'
+import Cart from './components/cart'
 
-function app() {
+function App() {
   return (
     <>
       <main className="container mx-auto px-4 py-16">
@@ -11,7 +11,7 @@ function app() {
         </div>
       </main>
     </>
-  );
+  )
 }
 
-export default app;
+export default App

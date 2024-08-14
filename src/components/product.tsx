@@ -2,12 +2,26 @@ import { useState } from 'react'
 import cart from '/assets/images/icon-add-to-cart.svg'
 import ButtonOnClick from './buttonOnClick'
 import { IItem } from '../types/product'
+import Picture from './picture'
 
 //import { getImageURL } from "../utils/imageURL";
 
-function product({ item }: IItem) {
+// Primitive data type
+// string
+// number
+// undefined
+// null
+
+// Non-Primitive data type
+// object
+// array
+// function
+
+function Product({ item, onNameChange }: IItem) {
   const { image, name, category, price } = item
   const { mobile, tablet, desktop } = image
+
+  const [pName, setPName] = useState(name)
 
   const [isActive, setIsActive] = useState(false)
 
@@ -18,11 +32,7 @@ function product({ item }: IItem) {
   return (
     <>
       <div className="mt-6 flex flex-col">
-        <picture>
-          <source media="(width < 640px)" srcSet={mobile} />
-          <source media="(width < 768px)" srcSet={tablet} />
-          <img className="card-image rounded-2xl" src={desktop} alt={`Image ${name}`} />
-        </picture>
+        <Picture image={image} />
 
         {isActive ? (
           <ButtonOnClick />
@@ -35,12 +45,22 @@ function product({ item }: IItem) {
 
         <div className="card-description">
           <p className="">{category}</p>
-          <p className="font-semibold">{name}</p>
+          <p className="font-semibold">{pName}</p>
           <p className="text-rose-700 font-semibold">${price.toFixed(2)}</p>
         </div>
+        <button
+          onClick={() => {
+            setPName((preValue) => {
+              onNameChange(preValue + ' New')
+              return preValue + ' New'
+            })
+          }}
+        >
+          Change Name
+        </button>
       </div>
     </>
   )
 }
 
-export default product
+export default Product

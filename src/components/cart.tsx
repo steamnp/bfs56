@@ -1,7 +1,11 @@
 import React from "react";
 import EmptyCartImg from "/assets/images/illustration-empty-cart.svg";
+import { CartContext } from "../context/product";
 
 function Cart() {
+  const value = useContext(CartContext);
+  console.log(value);
+
   return (
     <>
       <div className=" bg-white p-8 h-fit rounded-lg">

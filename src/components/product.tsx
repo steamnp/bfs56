@@ -3,7 +3,7 @@ import cart from "/assets/images/icon-add-to-cart.svg";
 import ButtonOnClick from "./buttonOnClick";
 //import { IProduct } from "../types/product";
 import { IItem } from "../types/product";
-import { cartContext } from "../context/product";
+import { CartContext } from "../context/product";
 
 //import { getImageURL } from "../utils/imageURL";
 
@@ -26,7 +26,7 @@ import { cartContext } from "../context/product";
 // console.log(add(1, 2));
 
 function Product({ item }: IItem) {
-  const { cartItems, setCartItems } = useContext(cartContext);
+  const { cartItems, setCartItems } = useContext(CartContext);
   console.log(cartItems);
 
   const { image, name, category, price } = item;
@@ -36,44 +36,43 @@ function Product({ item }: IItem) {
 
   const [isActive, setIsActive] = useState(false);
   const addTocart = () => {
-  const cartItemAdded = {name, category, price};
-  setCartItems((preValue) => cartItemAdded)
+    const cartItemAdded = { name, category, price };
+    setCartItems((preValue) => cartItemAdded);
 
+    // const handleButtonClick = () => {
+    //   setIsActive(!isActive);
+    // };
 
-  // const handleButtonClick = () => {
-  //   setIsActive(!isActive);
-  // };
+    return (
+      <>
+        <div className="mt-6 flex flex-col">
+          <picture>
+            <source media="(width < 640px)" srcSet={mobile} />
+            <source media="(width < 768px)" srcSet={tablet} />
+            <img
+              className="card-image rounded-2xl"
+              src={desktop}
+              alt={`Image ${name}`}
+            />
+          </picture>
 
-  return (
-    <>
-      <div className="mt-6 flex flex-col">
-        <picture>
-          <source media="(width < 640px)" srcSet={mobile} />
-          <source media="(width < 768px)" srcSet={tablet} />
-          <img
-            className="card-image rounded-2xl"
-            src={desktop}
-            alt={`Image ${name}`}
-          />
-        </picture>
+          {isActive ? (
+            <ButtonOnClick />
+          ) : (
+            <button className="card-button" onClick={addTocart}>
+              <img src={cart} alt="Add to Cart" />
+              <span className="truncate">Add to Cart</span>
+            </button>
+          )}
 
-        {isActive ? (
-          <ButtonOnClick />
-        ) : (
-          <button className="card-button" onClick={addTocart}>
-            <img src={cart} alt="Add to Cart" />
-            <span className="truncate">Add to Cart</span>
-          </button>
-        )}
-
-        <div className="card-description">
-          <p className="">{category}</p>
-          <p className="font-semibold">{name}</p>
-          <p className="text-rose-700 font-semibold">${price.toFixed(2)}</p>
+          <div className="card-description">
+            <p className="">{category}</p>
+            <p className="font-semibold">{name}</p>
+            <p className="text-rose-700 font-semibold">${price.toFixed(2)}</p>
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  };
 }
-
 export default Product;

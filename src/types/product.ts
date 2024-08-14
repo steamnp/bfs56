@@ -5,7 +5,7 @@ interface IProduct {
   price: number;
 }
 
-interface IImage {
+export interface IImage {
   thumbnail: string;
   mobile: string;
   tablet: string;

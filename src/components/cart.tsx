@@ -1,4 +1,3 @@
-import React from "react";
 import EmptyCartImg from "/assets/images/illustration-empty-cart.svg";
 
 function Cart() {

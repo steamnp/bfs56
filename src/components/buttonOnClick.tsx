@@ -1,4 +1,3 @@
-import React from "react";
 import SubtractIcon from "./subtractIcon";
 import AddIcon from "./addIcon";
 

@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import cart from '/assets/images/icon-add-to-cart.svg'
 import ButtonOnClick from './buttonOnClick'
 import { IItem } from '../types/product'
-import Picture from './picture'
+import { CartContext } from '../context/product'
 
 //import { getImageURL } from "../utils/imageURL";
 
@@ -17,27 +17,36 @@ import Picture from './picture'
 // array
 // function
 
-function Product({ item, onNameChange }: IItem) {
+// To read value from context -> useContext
+
+function product({ item }: IItem) {
+  const { cartItems, setCartItems } = useContext(CartContext)
+
+  console.log(cartItems)
+
   const { image, name, category, price } = item
   const { mobile, tablet, desktop } = image
 
-  const [pName, setPName] = useState(name)
-
   const [isActive, setIsActive] = useState(false)
 
-  const handleButtonClick = () => {
-    setIsActive(!isActive)
+  const addToCart = () => {
+    const cartItemAdded = { name, category, price }
+    setCartItems((preValue) => cartItemAdded)
   }
 
   return (
     <>
       <div className="mt-6 flex flex-col">
-        <Picture image={image} />
+        <picture>
+          <source media="(width < 640px)" srcSet={mobile} />
+          <source media="(width < 768px)" srcSet={tablet} />
+          <img className="card-image rounded-2xl" src={desktop} alt={`Image ${name}`} />
+        </picture>
 
         {isActive ? (
           <ButtonOnClick />
         ) : (
-          <button className="card-button" onClick={handleButtonClick}>
+          <button className="card-button" onClick={addToCart}>
             <img src={cart} alt="Add to Cart" />
             <span className="truncate">Add to Cart</span>
           </button>
@@ -45,22 +54,12 @@ function Product({ item, onNameChange }: IItem) {
 
         <div className="card-description">
           <p className="">{category}</p>
-          <p className="font-semibold">{pName}</p>
+          <p className="font-semibold">{name}</p>
           <p className="text-rose-700 font-semibold">${price.toFixed(2)}</p>
         </div>
-        <button
-          onClick={() => {
-            setPName((preValue) => {
-              onNameChange(preValue + ' New')
-              return preValue + ' New'
-            })
-          }}
-        >
-          Change Name
-        </button>
       </div>
     </>
   )
 }
 
-export default Product
+export default product

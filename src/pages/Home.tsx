@@ -1,4 +1,4 @@
-import Cart from '../components/cart'
+import Cart from '../components/cart/cart'
 import ProductList from '../components/product/product-list'
 import ProductProvider from '../context/product-provider'
 

@@ -1,37 +1,25 @@
 import { useContext, useState } from 'react'
 import cart from '/assets/images/icon-add-to-cart.svg'
-import ButtonOnClick from './buttonOnClick'
-import { IItem } from '../types/product'
-import { CartContext } from '../context/product'
-
-//import { getImageURL } from "../utils/imageURL";
-
-// Primitive data type
-// string
-// number
-// undefined
-// null
-
-// Non-Primitive data type
-// object
-// array
-// function
-
-// To read value from context -> useContext
+import ButtonOnClick from '../buttonOnClick'
+import { IItem } from '../../types/product'
+import { CartContext } from '../../context/product-context'
+import { v4 as uuidv4 } from 'uuid'
 
 function product({ item }: IItem) {
   const { cartItems, setCartItems } = useContext(CartContext)
-
-  console.log(cartItems)
 
   const { image, name, category, price } = item
   const { mobile, tablet, desktop } = image
 
   const [isActive, setIsActive] = useState(false)
 
+  // ...[1,2,3,4] -> 1,2,3,4
+
   const addToCart = () => {
-    const cartItemAdded = { name, category, price }
-    setCartItems((preValue) => cartItemAdded)
+    // ... -> Spread Operator -> Take all elements out from the array
+    // ...preValue -> copy or preserve pervious cart items
+    const cartItemAdded = { id: uuidv4(), name, category, price, image }
+    setCartItems((preValue) => [...preValue, cartItemAdded])
   }
 
   return (

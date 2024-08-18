@@ -1,11 +1,4 @@
-//? before colon to make the property optional
 // interface
-
-export type IPerson = {
-  age: number;
-  name: string;
-  favNum?: number;
-};
 
 interface IImage {
   thumbnail: string;

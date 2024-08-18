@@ -1,10 +1,11 @@
 import { useState } from "react";
 import cart from "/assets/images/icon-add-to-cart.svg";
 import ButtonOnClick from "./buttonOnClick";
+import Picture from "./picture";
 import { IItem } from "../types/product";
 // import { getImageURL } from "../utils/imageURL";
 
-function product({ item }: IItem) {
+function Product({ item }: IItem) {
   const { image, name, category, price } = item;
   const { mobile, tablet, desktop } = image;
 
@@ -17,16 +18,7 @@ function product({ item }: IItem) {
   return (
     <>
       <div className="mt-6 flex flex-col">
-        <picture>
-          <source media="(width < 640px)" srcSet={mobile} />
-          <source media="(width < 768px)" srcSet={tablet} />
-          <img
-            className="card-image rounded-2xl"
-            src={desktop}
-            alt={`Image ${name}`}
-          />
-        </picture>
-
+        <Picture image={image} />
         {isActive ? (
           <ButtonOnClick />
         ) : (
@@ -46,4 +38,4 @@ function product({ item }: IItem) {
   );
 }
 
-export default product;
+export default Product;

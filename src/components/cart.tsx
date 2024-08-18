@@ -1,8 +1,10 @@
-import data from "../data/data.json";
 import iconRemoveItem from "/assets/images/icon-remove-item.svg";
 import iconCarbonNeutral from "/assets/images/icon-carbon-neutral.svg";
+import { formatPrice } from "../utils/formatPrice";
+import { useContext } from "react";
+import { CartContext } from "../App";
 
-export function CartItem({ item }) {
+export function CartItem({ item, onClick }) {
   const { image, name, category, price } = item;
   return (
     <>
@@ -11,12 +13,20 @@ export function CartItem({ item }) {
           <p className="font-bold mb-2">{name}</p>
           <div className="flex gap-2 text-primary">
             <p className="font-bold mr-2">2x</p>
-            <p className="text-rose-400">@ ${price}</p>
-            <p className="text-rose-400 font-semibold">${price * 2}</p>
+            <p className="text-rose-400">@ ${formatPrice(price)}</p>
+            <p className="text-rose-400 font-semibold">
+              ${formatPrice(price * 2)}
+            </p>
           </div>
         </div>
         <div>
-          <img src={iconRemoveItem} alt="Delete" />
+          <img
+            className="cursor-pointer"
+            src={iconRemoveItem}
+            alt="Delete"
+            title="Delete"
+            onClick={onClick}
+          />
         </div>
       </li>
     </>
@@ -24,14 +34,25 @@ export function CartItem({ item }) {
 }
 
 export default function Cart() {
-  const itemCount = data.length;
+  const { cartItems, setCartItems } = useContext(CartContext);
+  const itemCount = cartItems.length;
+
+  const removeItem = (id) => {
+    const newCartItems = cartItems.filter((item) => item.id !== id);
+    setCartItems(newCartItems);
+  };
+
   return (
     <>
       <div className="bg-white p-8 h-fit rounded-lg">
         <h2 className="text-primary">Your Cart ({itemCount})</h2>
         <ul>
-          {data.map((item, index) => (
-            <CartItem key={index} item={item} />
+          {cartItems.map((index, item) => (
+            <CartItem
+              key={index}
+              item={item}
+              onClick={() => removeItem(item.id)}
+            />
           ))}
         </ul>
         <div className="flex justify-between items-center gap-4 py-8">

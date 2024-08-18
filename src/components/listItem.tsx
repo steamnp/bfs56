@@ -1,8 +1,19 @@
 import data from "../data/data.json";
+import { formatPrice } from "../utils/formatPrice";
+import { useContext } from "react";
+import { CartContext } from "../App";
 
 export function Item({ item }) {
+  const { cartItems, setCartItems } = useContext(CartContext);
+
   const { image, name, category, price } = item;
   const { thumbnail, mobile, tablet, desktop } = image;
+
+  const addToCart = () => {
+    const newId = cartItems.length + 1;
+    const newItem = { id: newId, ...item };
+    setCartItems([...cartItems, newItem]);
+  };
 
   // const cleanImageUrl = (image) => {
   //   return image.replace("./", "./");
@@ -15,7 +26,7 @@ export function Item({ item }) {
           <source media="(width < 768px)" srcSet={tablet} />
           <img className="rounded-2xl" src={desktop} alt={`Image ${name}`} />
         </picture>
-        <div className="card-button">
+        <div className="card-button" onClick={addToCart}>
           <img src="/assets/images/icon-add-to-cart.svg" alt="Icon cart" />
           <button>Add to Cart</button>
         </div>

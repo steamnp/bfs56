@@ -16,7 +16,7 @@ function Cart() {
       <div className="bg-white p-8 h-fit rounded-lg">
         <h2 className="text-primary">Your Cart ({cartItems.length})</h2>
         {cartItems.length > 0 ? (
-          <ul>
+          <div>
             {cartItems.map((item) => (
               <li
                 key={item.id}
@@ -43,7 +43,10 @@ function Cart() {
                 </div>
               </li>
             ))}
-          </ul>
+            <button className="bg-primary text-white rounded-full w-full p-4">
+              Confirm Order
+            </button>
+          </div>
         ) : (
           <div className="flex flex-col items-center mt-4">
             <img src="" alt="No items in cart" />

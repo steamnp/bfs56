@@ -4,7 +4,7 @@ import ButtonOnClick from "./buttonOnClick";
 import { IProduct } from "../types/product";
 //import { getImageURL } from "../utils/imageURL";
 
-function product({ item }: { item: IProduct }) {
+function Product({ item }: { item: IProduct }) {
   const { image, name, category, price } = item;
   const { mobile, tablet, desktop } = image;
 
@@ -17,16 +17,6 @@ function product({ item }: { item: IProduct }) {
   return (
     <>
       <div className="mt-6 flex flex-col">
-        <picture>
-          <source media="(width < 640px)" srcSet={mobile} />
-          <source media="(width < 768px)" srcSet={tablet} />
-          <img
-            className="card-image rounded-2xl"
-            src={desktop}
-            alt={`Image ${name}`}
-          />
-        </picture>
-
         {isActive ? (
           <ButtonOnClick />
         ) : (
@@ -46,4 +36,4 @@ function product({ item }: { item: IProduct }) {
   );
 }
 
-export default product;
+export default Product;

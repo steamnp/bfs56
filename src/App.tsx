@@ -1,8 +1,5 @@
-import Home from "./pages/Home";
-import Cart from "./components/cart";
-
-function app() {
+function App() {
   return <>APP</>;
 }
 
-export default app;
+export default App;

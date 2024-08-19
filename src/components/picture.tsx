@@ -1,4 +1,6 @@
-function picture({ image }) {
+import { IImage } from "../types/product";
+
+function picture({ image }: { image: IImage }) {
   const { mobile, tablet, desktop } = image;
   return (
     <picture>

@@ -1,17 +1,27 @@
-import Product from "../components/product";
 import data from "../../data.json";
-import { v4 as uuidv4 } from "uuid";
+
+import { useState } from "react";
+import { CartContext } from "../context/product-context";
+import Cart from "../components/cart";
+import ProductList from "../components/product/product-list";
+import ProductProvider from "../context/product-provider";
 
 function Home() {
+  const [cartItems, setCartItems] = useState([]);
   return (
-    <div>
-      <h1>Desserts</h1>
-      <div className="list">
-        {data.map((item, index) => (
-          <Product key={uuidv4()} item={item} />
-        ))}
-      </div>
-    </div>
+    <>
+      <main className="container mx-auto px-4 py-16">
+        <div className="grid gap-8 grid-cols-1 sm:grid-cols-[1fr_33%]">
+          <ProductProvider>
+            <div>
+              <h1>Desserts</h1>
+              <ProductList />
+            </div>
+            <Cart />
+          </ProductProvider>
+        </div>
+      </main>
+    </>
   );
 }
 

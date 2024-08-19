@@ -1,8 +1,8 @@
 import { useState } from "react";
 import cart from "/assets/images/icon-add-to-cart.svg";
-import ButtonOnClick from "./buttonOnClick";
-import { IItem } from "../types/product";
-//import { getImageURL } from "../utils/imageURL";
+import ButtonOnClick from "../buttonOnClick";
+import { IItem } from "../../types/product";
+import { v4 as uuidv4 } from "uuid";
 
 function product({ item }: IItem) {
   const { image, name, category, price } = item;
@@ -12,6 +12,11 @@ function product({ item }: IItem) {
 
   const handleButtonClick = () => {
     setIsActive(!isActive);
+  };
+
+  const addToCart = () => {
+    const cartItemAdded = { id: uuidv4(), name, category, price, image };
+    setCartItems((preValue) => [...preValue, cartItemAdded]);
   };
 
   return (

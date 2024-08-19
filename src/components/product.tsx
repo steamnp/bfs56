@@ -1,20 +1,23 @@
 import cart from "/assets/images/icon-add-to-cart.svg";
 import ButtonOnClick from "./buttonOnClick";
 import { IItem } from "../types/product";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Picture from "./picture";
+import { CartContext } from "../context/product";
 
 //import { getImageURL } from "../utils/imageURL";
 
 function Product({ item }: IItem) {
+  const { cartItem, setCartItem } = useContext(CartContext);
   const { image, name, category, price } = item;
 
   const { mobile, tablet, desktop } = image;
 
   const [isActive, setIsActive] = useState(false);
 
-  const handleButtonClick = () => {
-    setIsActive(!isActive);
+  const addToCart = () => {
+    const cartItemAdded = { name, category, price };
+    setCartItem((preValue) => cartItemAdded);
   };
 
   return (
@@ -24,7 +27,7 @@ function Product({ item }: IItem) {
         {isActive ? (
           <ButtonOnClick />
         ) : (
-          <button className="card-button" onClick={handleButtonClick}>
+          <button className="card-button" onClick={addToCart}>
             <img src={cart} alt="Add to Cart" />
             <span className="truncate">Add to Cart</span>
           </button>

@@ -1,17 +1,7 @@
-import Home from "./pages/Home";
-import Cart from "./components/cart";
+import React from "react";
 
-function app() {
-  return (
-    <>
-      <main className="container mx-auto px-4 py-16">
-        <div className="grid gap-8 grid-cols-1 sm:grid-cols-[1fr_33%]">
-          <Home />
-          <Cart />
-        </div>
-      </main>
-    </>
-  );
+function App() {
+  return <div>App</div>;
 }
 
-export default app;
+export default App;

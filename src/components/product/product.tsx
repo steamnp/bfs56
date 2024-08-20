@@ -1,29 +1,36 @@
-import cart from "/assets/images/icon-add-to-cart.svg";
-import ButtonOnClick from "./buttonOnClick";
-import { IItem } from "../types/product";
 import { useContext, useState } from "react";
-import Picture from "./picture";
-import { CartContext } from "../context/product";
+import cart from "/assets/images/icon-add-to-cart.svg";
+import ButtonOnClick from "../buttonOnClick";
+import { IItem } from "../../types/product";
+import { CartContext } from "../../context/product-context";
+import { v4 as uuidv4 } from "uuid";
 
-//import { getImageURL } from "../utils/imageURL";
+function product({ item }: IItem) {
+  const { cartItems, setCartItems } = useContext(CartContext);
 
-function Product({ item }: IItem) {
-  const { cartItem, setCartItem } = useContext(CartContext);
   const { image, name, category, price } = item;
-
   const { mobile, tablet, desktop } = image;
 
   const [isActive, setIsActive] = useState(false);
 
   const addToCart = () => {
-    const cartItemAdded = { name, category, price };
-    setCartItem((preValue) => cartItemAdded);
+    const cartItemAdded = { id: uuidv4(), name, category, price, image };
+    setCartItems((preValue) => [...preValue, cartItemAdded]);
   };
 
   return (
     <>
       <div className="mt-6 flex flex-col">
-        <Picture image={image} />
+        <picture>
+          <source media="(width < 640px)" srcSet={mobile} />
+          <source media="(width < 768px)" srcSet={tablet} />
+          <img
+            className="card-image rounded-2xl"
+            src={desktop}
+            alt={`Image ${name}`}
+          />
+        </picture>
+
         {isActive ? (
           <ButtonOnClick />
         ) : (
@@ -43,4 +50,4 @@ function Product({ item }: IItem) {
   );
 }
 
-export default Product;
+export default product;

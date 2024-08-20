@@ -1,5 +1,4 @@
-// interface
-
+// Define the type for images
 export interface IImage {
   thumbnail: string;
   mobile: string;
@@ -7,6 +6,7 @@ export interface IImage {
   desktop: string;
 }
 
+// Define the type for product details
 export interface IProduct {
   image: IImage;
   name: string;
@@ -14,6 +14,7 @@ export interface IProduct {
   price: number;
 }
 
-export interface IItem {
-  item: IProduct;
+// Define the type for items in the cart (if different from product)
+export interface ICartItem extends IProduct {
+  id: string; // Added id for cart items
 }

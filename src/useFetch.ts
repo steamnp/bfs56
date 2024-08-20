@@ -15,7 +15,7 @@ function useFetch(url) {
       .catch((err) => {
         setError(err.message);
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return { countries, loading };
 }
 

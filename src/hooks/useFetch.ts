@@ -2,10 +2,14 @@
 
 import { useEffect, useState } from 'react'
 
-function useFetch(url: string) {
-  const [data, setData] = useState([])
+// <T> -> TypeScript Generic
+
+function useFetch<T>(url: string) {
+  // How to type useState hook?
+  const [data, setData] = useState<T | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+
   useEffect(() => {
     fetch(url)
       .then((res) => res.json())

@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    font-family: 'Red Hat Text';
+    font-family: "Red Hat Text";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

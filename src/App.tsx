@@ -1,9 +1,11 @@
-import React from 'react'
-
+import { useEffect } from "react";
 function App() {
-  return (
-    <div>App</div>
-  )
+  useEffect(() => {
+    const output = fetch("https://restcountries.com/v3.1/all");
+    console.log(output);
+  });
+
+  return <div>App</div>;
 }
 
-export default App
+export default App;

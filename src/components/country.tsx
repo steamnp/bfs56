@@ -4,7 +4,7 @@ import { TCountry } from '../types/types'
 function Country() {
   const { data, loading, error } = useFetch<TCountry[]>('https://restcountries.com/v3.1/name/usa')
 
-  throw new Error('Error')
+  // throw new Error('Error')
 
   if (error) {
     return <div>error</div>

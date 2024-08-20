@@ -6,12 +6,14 @@ import { CartContext } from "../../context/product-context";
 import { v4 as uuidv4 } from "uuid";
 
 function product({ item }: IItem) {
-  const { cartItems, setCartItems } = useContext(CartContext);
+  const { setCartItems } = useContext(CartContext) as {
+    setCartItems: React.Dispatch<React.SetStateAction<any[]>>;
+  };
 
   const { image, name, category, price } = item;
   const { mobile, tablet, desktop } = image;
 
-  const [isActive, setIsActive] = useState(false);
+  const [isActive] = useState(false);
 
   // ...[1,2,3,4] -> 1,2,3,4
 

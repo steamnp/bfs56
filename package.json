@@ -1,4 +1,4 @@
-{
+git add package-lock.json package.jsongit add package-lock.json package.json{
   "name": "bfs-56",
   "private": true,
   "version": "0.0.0",

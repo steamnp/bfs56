@@ -1,38 +1,7 @@
-import { useEffect, useState } from "react";
-const apiUrl = "https://restcountries.com/v3.1/all";
-
+import useFetchCountries from "./useFetch"; // Import the custom hook
 function App() {
-  const [countries, setCountries] = useState([]);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
+  const { countries, error, loading } = useFetchCountries(); // Use the custom hook
 
-  console.log(countries);
-  //calling data type
-  //useEffect()
-  //useEffect is a hook
-  //empty dependency array means it will run only once
-  useEffect(() => {
-    // console.log("Inside useEffect hook");
-    //synchronous
-    //how to consume promise or get response out of promise
-    //-> then method
-    //->async await
-    fetch(apiUrl)
-      //res.jason is also a promise which returns another promise.
-      //so we can use another then method to get the response out of it.
-      //fetch is a promise
-      //fetch returns a promise
-      //fetch is a function
-      //res.json() converts json data to javascript object
-      .then((res) => res.json())
-      .then((data) => {
-        setCountries(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
-  }, []);
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -40,8 +9,8 @@ function App() {
     return <div>Loading...</div>;
   }
 
-  return countries.length < 0 ? (
-    <div>Loading...</div>
+  return countries.length === 0 ? (
+    <div>No countries found</div>
   ) : (
     <div>
       {countries.map((country, index) => (

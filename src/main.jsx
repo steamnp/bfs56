@@ -1,19 +1,25 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './main.css'
+import * as React from "react";
+import * as ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./index.css";
+import Root from "./routes/root";
+import ErrorPage from "./error-page";
+import Contact from "./routes/contact";
 
-// camelCase -> gorakhRajJoshi -> while creating javascript variable
-// PascalCase -> GorakhRajJoshi -> While creating component
-// kebab-case -> gorakh-raj-joshi -> While creating files or folders
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "contacts/:contactId",
+    element: <Contact />,
+  },
+]);
 
-// A component name should be written in PascalCase
-// This is App component
-function App() {
-  return <div className="box">Hello</div>
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
-)
+);

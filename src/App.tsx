@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 // Make sure to use the correct API URL
-const apiUrl = "https://restcountries.com/v3.1/name/nepal";
+const apiUrl = "https://restcountries.com/v3.1/all";
 
 function App() {
   const [countries, setCountries] = useState([]);
@@ -34,6 +34,7 @@ function App() {
       {countries.map((country, index) => (
         <div key={index}>
           <h1>{country.name.official}</h1>
+          <img src={country.flags.png} alt="flag" />
         </div>
       ))}
     </div>

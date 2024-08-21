@@ -1,11 +1,8 @@
-import React from "react";
-import { ReactDOM } from "react";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
-import Home from "./pages/home.tsx";
+import Home from "./pages/home";
 import "./index.css";
 
 createRoot(document.getElementById("root")!).render(

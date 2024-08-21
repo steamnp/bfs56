@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { data } from "./data.ts";
+import { data } from "./data";
 
 export interface CounterState {
   value: number;

@@ -1,0 +1,42 @@
+export const data = [
+  {
+    id: "001",
+    name: "Smartphone",
+    brand: "TechCo",
+    price: 499.99,
+    color: "Black",
+    category: "Electronics",
+  },
+  {
+    id: "002",
+    name: "Wireless Headphones",
+    brand: "SoundTech",
+    price: 129.99,
+    color: "White",
+    category: "Electronics",
+  },
+  {
+    id: "003",
+    name: "Running Shoes",
+    brand: "FitSport",
+    price: 89.99,
+    color: "Blue",
+    category: "Sports & Outdoors",
+  },
+  {
+    id: "004",
+    name: "Coffee Maker",
+    brand: "BrewMaster",
+    price: 59.99,
+    color: "Silver",
+    category: "Home & Kitchen",
+  },
+  {
+    id: "005",
+    name: "Backpack",
+    brand: "Adventura",
+    price: 39.99,
+    color: "Red",
+    category: "Travel & Accessories",
+  },
+];

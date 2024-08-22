@@ -5,8 +5,8 @@ import { useState } from "react";
 import { useRegisterNewUserMutation } from "./redux/api/user";
 
 const intialState = {
-  firstName: "",
-  lastName: "",
+  firstname: "",
+  lastname: "",
   email: "",
   password: "",
   mobile: "",
@@ -27,13 +27,13 @@ function App() {
 
   function registerUser() {
     if (
-      user.firstName &&
-      user.lastName &&
+      user.firstname &&
+      user.lastname &&
       user.email &&
       user.password &&
       user.mobile
     ) {
-      register(JSON.stringify(user));
+      return register(user);
     } else {
       setError("Please fill all the fields");
     }
@@ -72,7 +72,7 @@ function App() {
             First Name
             <input
               onChange={(e) => {
-                setUser({ ...user, firstName: e.target.value });
+                setUser({ ...user, firstname: e.target.value });
               }}
               type="text"
               name=""
@@ -83,7 +83,7 @@ function App() {
             Last Name
             <input
               onChange={(e) => {
-                setUser({ ...user, lastName: e.target.value });
+                setUser({ ...user, lastname: e.target.value });
               }}
               type="text"
               name=""

@@ -61,7 +61,7 @@ const ProductCard = (props) => {
           </div>
 
           <div className="product-details">
-            <h6 className="brand"> {data?.category.title}</h6>
+            <h6 className="brand"> {data?.category?.title}</h6>
             <h5 className="product-title">{data?.title}</h5>
             <ReactStars
               count={5}

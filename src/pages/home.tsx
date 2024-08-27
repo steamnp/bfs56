@@ -1,7 +1,6 @@
-import { useSelector } from "react-redux";
-
+import { useAppSelector } from "../redux/features/hooks";
 function Home() {
-  const products = useSelector((state) => {
+  const products = useAppSelector((state) => {
     return state.product;
   });
 

@@ -1,6 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import productSlice from "./features/product-slice";
 
+import { pokemonApi } from "./api/pokemon";
+
 export const store = configureStore({
   reducer: {
     product: productSlice,

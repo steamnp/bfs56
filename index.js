@@ -1,22 +1,28 @@
-import express from 'express'
+import express from "express";
+import { errorHandler, notFound } from "./middleWare/error.js";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import { userRouter } from "./routes/user.js";
 
-const app = express()
+dotenv.config();
+const app = express();
 
-// listen()
-// get()
+app.use(express.json()); // parse incoming data
 
 app.listen(4000, () => {
-  console.log('I am running in port 4000')
-})
+  console.log("I am running in port 4000");
+});
 
-// http://localhost:4000/api/product
-// REST API
-app.get('/api/product', (req, res, next) => {
-  const output = { name: 'iPhone' }
-  res.json(output)
-})
+app.use("/api/user", userRouter);
 
-app.get('/api/product/new', (req, res, next) => {
-  const output = { name: 'new response' }
-  res.json(output)
-})
+app.use(notFound);
+app.use(errorHandler);
+
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => {
+    console.log("Connected to Database!");
+  })
+  .catch((error) => {
+    console.log(error);
+  });

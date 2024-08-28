@@ -20,8 +20,7 @@ import { errorHandler, notFound } from "./middlewares/errorHandler.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 4000;
-const MONGO_URI =
-  "mongodb+srv://chaudharimanish07:v6O9g5QQBRUauh64@e-commerce.vpwih.mongodb.net/?retryWrites=true&w=majority&appName=e-commerce";
+const MONGO_URI = process.env.MONGODB_URL;
 
 const app = express();
 

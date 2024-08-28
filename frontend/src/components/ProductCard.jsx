@@ -6,7 +6,7 @@ import { addToCart, addToWhishList } from "../features/products/productsSlice";
 
 const ProductCard = (props) => {
   const { grid, data } = props;
- 
+
   // console.log(grid)
   let location = useLocation();
 
@@ -22,7 +22,7 @@ const ProductCard = (props) => {
     dispatch(
       addToCart({
         productId: data?._id,
-        quantity:1,
+        quantity: 1,
         color: data?.color[0]?._id,
         price: data?.price,
       })
@@ -61,7 +61,7 @@ const ProductCard = (props) => {
           </div>
 
           <div className="product-details">
-            <h6 className="brand"> {data?.category.title}</h6>
+            <h6 className="brand"> {data?.category?.title}</h6>
             <h5 className="product-title">{data?.title}</h5>
             <ReactStars
               count={5}
@@ -84,7 +84,11 @@ const ProductCard = (props) => {
                 <img src="images/view.svg" alt="view" />
               </Link>
               <Link>
-                <img src="images/add-cart.svg" alt="addcart" onClick={() => uploadCart()}/>
+                <img
+                  src="images/add-cart.svg"
+                  alt="addcart"
+                  onClick={() => uploadCart()}
+                />
               </Link>
             </div>
           </div>

@@ -1,9 +1,10 @@
-import React from "react";
+import "./index.css";
 import { createRoot } from "react-dom/client";
 import { store } from "./app/store";
 import App from "./App";
 import { Provider } from "react-redux";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 if (process.env.NODE_ENV === "production") {
   disableReactDevTools();

@@ -7,11 +7,13 @@ import CustomInput from "../components/CustomInput";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../features/auth/authSlice";
+import { useLoginUserMutation } from "../features/auth/authService"; // Updated import
 import { getUserFromLocalStorage } from "../utils/tokenConfig";
 
 const validationSchema = Yup.object({
-  email: Yup.string().email("Please give a valid email"),
+  email: Yup.string()
+    .email("Please give a valid email")
+    .required("Email is required"),
   password: Yup.string().required("Password is required"),
 });
 
@@ -20,11 +22,9 @@ const Login = () => {
   const navigate = useNavigate();
 
   const user = getUserFromLocalStorage();
- 
+  const [loginUser, { isLoading, isError, data }] = useLoginUserMutation(); // Using the hook from createApi
 
   const authState = useSelector((state) => state.auth);
-
-  
 
   const formik = useFormik({
     initialValues: {
@@ -32,17 +32,25 @@ const Login = () => {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      dispatch(loginUser(values));
+    onSubmit: async (values) => {
+      try {
+        const result = await loginUser(values).unwrap();
+        console.log("Login successful:", result);
+        navigate("/");
+        formik.resetForm();
+      } catch (err) {
+        console.error("Failed to login:", err);
+      }
     },
   });
 
   useEffect(() => {
-    if (user !== null && authState.isError === false) {
+    if (user !== null && !isError) {
       navigate("/");
       formik.resetForm();
     }
-  }, [authState]);
+  }, [isError, data]);
+
   return (
     <>
       <Meta title={"Login"} />
@@ -73,6 +81,7 @@ const Login = () => {
                   placeholder="Password"
                   classname="form-control"
                   type="password"
+                  name="password"
                   value={formik.values.password}
                   onChange={formik.handleChange("password")}
                   onBlur={formik.handleBlur("password")}
@@ -83,7 +92,11 @@ const Login = () => {
                 <div>
                   <Link to="/forgot-password">Forgot Password?</Link>
                   <div className="mt-3 d-flex justify-content-center gap-15 align-items-center">
-                    <button className="button border-0" type="submit">
+                    <button
+                      className="button border-0"
+                      type="submit"
+                      disabled={isLoading}
+                    >
                       Login
                     </button>
                     <Link to="/signup" className="button signup">

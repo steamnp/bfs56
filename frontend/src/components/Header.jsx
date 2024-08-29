@@ -1,72 +1,53 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
-import { useDispatch, useSelector } from "react-redux";
-import { getCart, getProducts } from "../features/products/productsSlice";
+import { useDispatch } from "react-redux";
+import {
+  useGetCartQuery,
+  useGetProductsQuery,
+} from "../features/products/productsService";
+import { CgProfile } from "react-icons/cg";
 import { IoIosLogOut } from "react-icons/io";
 import { FaShippingFast } from "react-icons/fa";
-import { CgProfile } from "react-icons/cg";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 
-// import cart from '../images/cart.svg'
-// import user from '../images/user2.svg'
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const getUserFromLocalStorage = JSON.parse(localStorage.getItem("user"));
 
-  const products = useSelector((state) => state?.products?.products);
+  const getUserFromLocalStorage = useMemo(
+    () => JSON.parse(localStorage.getItem("user")),
+    []
+  );
 
-  const [subTotal, setSubTotal] = useState(null);
+  const { data: products = [] } = useGetProductsQuery();
+  const { data: cartProducts = [] } = useGetCartQuery();
+
+  const [subTotal, setSubTotal] = useState(0);
   const [productOpt, setProductOpt] = useState([]);
-  const [logout, setLogout] = useState(false);
-  const [paginate, setPaginate] = useState(true);
-  const [cartLength, setCartLength] = useState(0);
-
-  const cartProducts = useSelector((state) => state?.products?.cartProducts);
-
-  const cartStatus = useSelector((state) => state?.products);
 
   useEffect(() => {
-    if (getUserFromLocalStorage !== null) {
-      dispatch(getCart());
-    } else {
-      setSubTotal(0);
-    }
-  }, [logout]);
-
-  useEffect(() => {
-    dispatch(getProducts());
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.clear();
-    setLogout(true);
-  };
-
-  //for accumulating products into a new array for typehead
-  useEffect(() => {
-    let typeHeadData = [];
-    for (let index = 0; index < products?.length; index++) {
-      const element = products[index];
-      typeHeadData.push({
-        id: index,
-        prod: element?._id,
-        name: element?.title,
-      });
-    }
+    const typeHeadData = products.map((product, index) => ({
+      id: index,
+      prod: product._id,
+      name: product.title,
+    }));
     setProductOpt(typeHeadData);
   }, [products]);
 
-  //for showing total cart amount at the cart icon in the top
   useEffect(() => {
-    let sum = 0;
-    for (let index = 0; index < cartProducts?.length; index++) {
-      sum = sum + cartProducts[index]?.price * cartProducts[index]?.quantity;
-      setSubTotal(sum);
-    }
+    const sum = cartProducts.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+    setSubTotal(sum);
   }, [cartProducts]);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
 
   return (
     <>
@@ -81,7 +62,7 @@ const Header = () => {
             <div className="col-6">
               <p className="text-end text-white mb-0">
                 Hotline:{" "}
-                <a className="text-white" href="tel:+254 726606039">
+                <a className="text-white" href="tel:+254726606039">
                   +254 726606039
                 </a>
               </p>
@@ -103,13 +84,14 @@ const Header = () => {
               <div className="input-group">
                 <Typeahead
                   id="pagination-example"
-                  onPaginate={() => console.log("Results paginated")}
-                  paginate={paginate}
-                  labelKey={"name"}
+                  paginate={true}
+                  labelKey="name"
                   options={productOpt}
                   minLength={2}
                   onChange={(selected) => {
-                    navigate(`/product/${selected[0]?.prod}`);
+                    if (selected.length > 0) {
+                      navigate(`/product/${selected[0]?.prod}`);
+                    }
                   }}
                   placeholder="Search for products..."
                 />
@@ -127,7 +109,7 @@ const Header = () => {
                   >
                     <img src="images/compare.svg" alt="compare" />
                     <p className="mb-0">
-                      Compare <br /> Products{" "}
+                      Compare <br /> Products
                     </p>
                   </Link>
                 </div>
@@ -138,25 +120,21 @@ const Header = () => {
                   >
                     <img src="images/wishlist.svg" alt="wishlist" />
                     <p className="mb-0">
-                      Favourite <br /> Wishlist{" "}
+                      Favourite <br /> Wishlist
                     </p>
                   </Link>
                 </div>
                 <div>
                   {getUserFromLocalStorage === null ? (
-                    <div>
-                      {" "}
-                      <Link
-                        to={"/login"}
-                        className="d-flex align-items-center gap-10  text-white"
-                      >
-                        <img src="images/user2.svg" alt="User" />
-
-                        <p className="mb-0">
-                          Login <br /> My Account{" "}
-                        </p>
-                      </Link>{" "}
-                    </div>
+                    <Link
+                      to="/login"
+                      className="d-flex align-items-center gap-10 text-white"
+                    >
+                      <img src="images/user2.svg" alt="User" />
+                      <p className="mb-0">
+                        Login <br /> My Account
+                      </p>
+                    </Link>
                   ) : (
                     <div>
                       <button
@@ -167,10 +145,8 @@ const Header = () => {
                         aria-expanded="false"
                       >
                         <img src="images/user2.svg" alt="User" />
-                        <span className=" d-inline-block">
-                          Hello
-                          <br />
-                          {getUserFromLocalStorage?.firstname}
+                        <span className="d-inline-block">
+                          Hello <br /> {getUserFromLocalStorage?.firstname}
                         </span>
                       </button>
                       <ul
@@ -187,13 +163,15 @@ const Header = () => {
                             <FaShippingFast /> My Orders
                           </Link>
                         </li>
-                        <div onClick={handleLogout}>
-                          <li>
-                            <Link className="dropdown-item fs-6" to="">
-                              <IoIosLogOut /> Logout
-                            </Link>
-                          </li>
-                        </div>
+                        <li>
+                          <Link
+                            className="dropdown-item fs-6"
+                            to="#"
+                            onClick={handleLogout}
+                          >
+                            <IoIosLogOut /> Logout
+                          </Link>
+                        </li>
                       </ul>
                     </div>
                   )}
@@ -206,9 +184,9 @@ const Header = () => {
                     <img src="images/cart.svg" alt="cart" />
                     <div className="d-flex flex-column">
                       <span className="badge bg-white text-dark">
-                        {cartProducts?.length > 0 ? cartProducts?.length : 0}
+                        {cartProducts.length}
                       </span>
-                      <p className="mb-0">₹{subTotal ? subTotal : 0}</p>
+                      <p className="mb-0">₹{subTotal}</p>
                     </div>
                   </Link>
                 </div>
@@ -219,85 +197,43 @@ const Header = () => {
       </header>
       <header className="header-bottom py-3">
         <div className="container-xxl">
-          <div className="row">
+          <div className="row align-items-center">
             <div className="col-12">
-              <div className="menu-bottom d-flex align-items-center gap-30">
-                <div>
-                  <div className="dropdown">
-                    <button
-                      className="btn btn-secondary dropdown-toggle bg-transparent border-0 gap-15 d-flex align-items-center"
-                      type="button"
-                      id="dropdownMenuButton1"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <img src="images/menu.svg" alt="" />
-                      <span className=" me-5 d-inline-block">
-                        Shop categories
-                      </span>
-                    </button>
-                    <ul
-                      className="dropdown-menu"
-                      aria-labelledby="dropdownMenuButton1"
-                    >
-                      <li>
-                        <Link className="dropdown-item text-white" to="">
-                          Music & Gaming
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item text-white" to="">
-                          Camera
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item text-white" to="">
-                          Computers & Laptops
-                        </Link>
-                      </li>
-
-                      <li>
-                        <Link className="dropdown-item text-white" to="">
-                          Smart Watches
-                        </Link>
-                      </li>
-
-                      <li>
-                        <Link className="dropdown-item text-white" to="">
-                          Smartphones & Tablets
-                        </Link>
-                      </li>
-
-                      <li>
-                        <Link
-                          className="dropdown-item text-white"
-                          to="/product"
-                        >
-                          Audio & Headphones
-                        </Link>
-                      </li>
-
-                      <li>
-                        <Link className="dropdown-item text-white" to="">
-                          TV & Home Entertainment
-                        </Link>
-                      </li>
-
-                      <li>
-                        <Link className="dropdown-item text-white" to="">
-                          Drones & Accessories
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="menu-links">
-                  <div className="d-flex align-items-center gap-15">
-                    <NavLink to="/">Home</NavLink>
-                    <NavLink to="/product">Our Store</NavLink>
-                    <NavLink to="/blogs">Blogs</NavLink>
-                    <NavLink to="/contact">Contact</NavLink>
-                  </div>
+              <div className="navbar navbar-expand-lg navbar-light bg-light">
+                <button
+                  className="navbar-toggler"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#navbarNav"
+                  aria-controls="navbarNav"
+                  aria-expanded="false"
+                  aria-label="Toggle navigation"
+                >
+                  <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse" id="navbarNav">
+                  <ul className="navbar-nav d-flex align-items-center justify-content-center">
+                    <li className="nav-item">
+                      <NavLink className="nav-link text-white" to="/">
+                        Home
+                      </NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link text-white" to="/shop">
+                        Shop
+                      </NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link text-white" to="/blog">
+                        Blog
+                      </NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link text-white" to="/contact">
+                        Contact
+                      </NavLink>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>

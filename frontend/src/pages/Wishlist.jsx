@@ -2,22 +2,21 @@ import React, { useEffect } from "react";
 import Meta from "../components/Meta";
 import BreadCrumb from "../components/BreadCrumb";
 import Container from "../components/Container";
-import { useDispatch, useSelector } from "react-redux";
-import { getwishlist } from "../features/auth/authSlice";
-import { addToWhishList } from "../features/products/productsSlice";
+import { useDispatch } from "react-redux";
+import { useGetWishListQuery } from "../features/auth/authService";
+import { addToWhishList } from "../features/products/productsSlice"; // Now correctly imported
+
 const Wishlist = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getwishlist());
-  }, []);
+  const { data: wishList, error, isLoading } = useGetWishListQuery();
 
   const addTtoWlist = (id) => {
-    // console.log(id);
     dispatch(addToWhishList(id));
   };
 
-  const wishList = useSelector((state) => state.auth.wishlist);
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading wishlist</div>;
 
   return (
     <>
@@ -43,7 +42,7 @@ const Wishlist = () => {
                       <img
                         src={item?.images[0]}
                         className="img-fluid w-100"
-                        alt="watch"
+                        alt={item?.title}
                       />
                     </div>
                     <div className="py-3 px-3">

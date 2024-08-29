@@ -1,29 +1,30 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Meta from "../components/Meta";
 import BreadCrumb from "../components/BreadCrumb";
-// import blog from "../images/blog-1.jpg"
 import { Link, useLocation } from "react-router-dom";
 import { HiOutlineArrowLeft } from "react-icons/hi";
 import Container from "../components/Container";
-import { useDispatch, useSelector } from "react-redux";
-import { getABlog } from "../features/blog/blogSlice";
+import { useGetAblogQuery } from "../features/blog/blogService";
 
 const SingleBlog = () => {
   const location = useLocation();
   const blogID = location.pathname.split("/")[2];
 
-  const dispatch = useDispatch();
+  // Use the useGetAblogQuery hook to fetch the single blog by its ID
+  const { data: blog, error, isLoading } = useGetAblogQuery(blogID);
 
-  useEffect(() => {
-    dispatch(getABlog(blogID));
-  }, []);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  const blogState = useSelector((state) => state.blogs.singleBlog);
+  if (error) {
+    return <div>Error loading blog</div>;
+  }
 
   return (
     <>
       <Meta title={blogState?.title} />
-      <BreadCrumb title={blogState?.title}/>
+      <BreadCrumb title={blogState?.title} />
       <Container class1="blog-wrapper home-wrapper-2 py-5">
         <div className="row">
           <div className="col-12">
@@ -37,9 +38,9 @@ const SingleBlog = () => {
                 className="img-fluid w-100 my-4"
                 alt="blog"
               />
-              <p dangerouslySetInnerHTML={{__html:blogState?.description}}>
-                
-              </p>
+              <p
+                dangerouslySetInnerHTML={{ __html: blogState?.description }}
+              ></p>
             </div>
           </div>
         </div>

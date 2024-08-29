@@ -1,3 +1,4 @@
+// src/components/Cart.jsx
 import React, { useEffect, useState } from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
@@ -8,17 +9,14 @@ import Container from "../components/Container";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteOneProductCart,
-  getCart,
   updateQuantityCart,
+  getCart, // Make sure this selector is correct
 } from "../features/products/productsSlice";
 
 const Cart = () => {
   const dispatch = useDispatch();
-
   const [productUpdateDetails, setProductUpdateDetails] = useState(null);
   const [subTotal, setSubTotal] = useState(null);
-
- 
 
   useEffect(() => {
     if (
@@ -33,27 +31,27 @@ const Cart = () => {
         })
       );
     }
-  }, [productUpdateDetails]);
+  }, [productUpdateDetails, dispatch]);
 
   function removeFromCart(id) {
     dispatch(deleteOneProductCart(id));
     setTimeout(() => {
-      dispatch(getCart());
+      dispatch(getCart()); // Fetch updated cart
     }, 2000);
   }
 
   useEffect(() => {
     dispatch(getCart());
-  }, []);
+  }, [dispatch]);
 
-  const cartProducts = useSelector((state) => state.products.cartProducts);
+  const cartProducts = useSelector(getCart); // Use the selector to get cartProducts
 
   useEffect(() => {
     let sum = 0;
     for (let index = 0; index < cartProducts?.length; index++) {
-      sum = sum + cartProducts[index].price * cartProducts[index].quantity;
-      setSubTotal(sum);
+      sum += cartProducts[index].price * cartProducts[index].quantity;
     }
+    setSubTotal(sum);
   }, [cartProducts]);
 
   return (
@@ -101,10 +99,8 @@ const Cart = () => {
                       <input
                         className="form-control"
                         type="number"
-                        name=""
                         min={1}
                         max={10}
-                        id=""
                         value={
                           productUpdateDetails?.quantity
                             ? productUpdateDetails?.quantity
@@ -121,9 +117,7 @@ const Cart = () => {
                     <div>
                       <AiFillDelete
                         className="text-danger"
-                        onClick={() => {
-                          return removeFromCart(item._id);
-                        }}
+                        onClick={() => removeFromCart(item._id)}
                       />
                     </div>
                   </div>
@@ -140,7 +134,7 @@ const Cart = () => {
                   Continue Shopping
                 </Link>
                 {(subTotal !== 0 || subTotal !== null) && (
-                  <div className="d-flex  flex-column align-items-end">
+                  <div className="d-flex flex-column align-items-end">
                     <h4>SubTotal: ₹{subTotal}</h4>
                     <p>Taxes and shipping calculated at checkout</p>
                     <Link to="/checkout" className="button">

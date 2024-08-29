@@ -1,10 +1,8 @@
-// UserProfile.js
-
 import React, { useState } from "react";
 import { FaUserEdit } from "react-icons/fa"; // Import the edit icon
 import { useDispatch } from "react-redux";
 import { getUserFromLocalStorage } from "../utils/tokenConfig";
-import { updateUser } from "../features/auth/authSlice";
+import { useUpdateUserMutation } from "../features/auth/authService"; // Updated import
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -22,15 +20,26 @@ const Profile = () => {
   const [user, setUser] = useState(initialUser);
   const [isEditing, setIsEditing] = useState(false);
 
+  const [updateUser, { isLoading, isError, isSuccess }] =
+    useUpdateUserMutation(); // Use the hook from createApi
+
   const handleEditClick = () => {
     setIsEditing(!isEditing);
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
     setIsEditing(false);
-    dispatch(updateUser({firstName:user.firstName, lastname:user.lastName, email:user.email, mobile:user.mobile}))
-    
-    
+    try {
+      const updatedUser = await updateUser({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        mobile: user.mobile,
+      }).unwrap();
+      console.log("User updated successfully:", updatedUser);
+    } catch (error) {
+      console.error("Failed to update user:", error);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -121,10 +130,13 @@ const Profile = () => {
           className="btn"
           style={{ backgroundColor: "#febd69", borderColor: "#febd69" }}
           onClick={isEditing ? handleSaveClick : handleEditClick}
+          disabled={isLoading} // Disable the button while the update is in progress
         >
           {isEditing ? "Save" : <FaUserEdit />}
         </button>
       </div>
+      {isError && <div className="error">Error updating profile</div>}
+      {isSuccess && <div className="success">Profile updated successfully</div>}
     </div>
   );
 };

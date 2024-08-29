@@ -3,10 +3,10 @@ import authService from "./authService";
 import { toast } from "react-toastify";
 
 const initialState = {
-  signedUpUser:null,
+  signedUpUser: null,
   loginedUser: null,
-  updatedUser:null,
-  wishlist:[],
+  updatedUser: null,
+  wishlist: [],
   isLoading: false,
   isSuccess: false,
   isError: false,

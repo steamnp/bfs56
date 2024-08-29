@@ -2,19 +2,19 @@ import React, { useEffect, useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import { getCart, getProducts } from "../features/products/productsSlice";
 import { IoIosLogOut } from "react-icons/io";
 import { FaShippingFast } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
+import { useGetCartQuery } from "../features/products/productsService"; // Updated import
 
-// import cart from '../images/cart.svg'
-// import user from '../images/user2.svg'
 const Header = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const getUserFromLocalStorage = JSON.parse(localStorage.getItem("user"));
+
+  // Fetch cart data using RTK Query hook
+  const { data: cartProducts = [], isLoading: cartLoading } = useGetCartQuery();
 
   const products = useSelector((state) => state?.products?.products);
 
@@ -22,51 +22,34 @@ const Header = () => {
   const [productOpt, setProductOpt] = useState([]);
   const [logout, setLogout] = useState(false);
   const [paginate, setPaginate] = useState(true);
-  const [cartLength, setCartLength] = useState(0);
-
-  const cartProducts = useSelector((state) => state?.products?.cartProducts);
-
-  const cartStatus = useSelector((state) => state?.products);
 
   useEffect(() => {
-    if (getUserFromLocalStorage !== null) {
-      dispatch(getCart());
-    } else {
-      setSubTotal(0);
+    if (!cartLoading) {
+      let sum = 0;
+      cartProducts.forEach((item) => {
+        sum += item.price * item.quantity;
+      });
+      setSubTotal(sum);
     }
-  }, [logout]);
-
-  useEffect(() => {
-    dispatch(getProducts());
-  }, []);
+  }, [cartProducts, cartLoading]);
 
   const handleLogout = () => {
     localStorage.clear();
     setLogout(true);
+    navigate("/login");
   };
 
-  //for accumulating products into a new array for typehead
   useEffect(() => {
     let typeHeadData = [];
-    for (let index = 0; index < products?.length; index++) {
-      const element = products[index];
+    products.forEach((element, index) => {
       typeHeadData.push({
         id: index,
         prod: element?._id,
         name: element?.title,
       });
-    }
+    });
     setProductOpt(typeHeadData);
   }, [products]);
-
-  //for showing total cart amount at the cart icon in the top
-  useEffect(() => {
-    let sum = 0;
-    for (let index = 0; index < cartProducts?.length; index++) {
-      sum = sum + cartProducts[index]?.price * cartProducts[index]?.quantity;
-      setSubTotal(sum);
-    }
-  }, [cartProducts]);
 
   return (
     <>
@@ -103,7 +86,6 @@ const Header = () => {
               <div className="input-group">
                 <Typeahead
                   id="pagination-example"
-                  onPaginate={() => console.log("Results paginated")}
                   paginate={paginate}
                   labelKey={"name"}
                   options={productOpt}
@@ -145,17 +127,15 @@ const Header = () => {
                 <div>
                   {getUserFromLocalStorage === null ? (
                     <div>
-                      {" "}
                       <Link
                         to={"/login"}
                         className="d-flex align-items-center gap-10  text-white"
                       >
                         <img src="images/user2.svg" alt="User" />
-
                         <p className="mb-0">
                           Login <br /> My Account{" "}
                         </p>
-                      </Link>{" "}
+                      </Link>
                     </div>
                   ) : (
                     <div>

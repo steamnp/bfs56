@@ -1,19 +1,21 @@
-import React, { useEffect } from "react";
+import React from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import BlogCard from "../components/BlogCard";
 import Container from "../components/Container";
-import { useDispatch, useSelector } from "react-redux";
-import { getBlogs } from "../features/blog/blogSlice";
+import { useGetBlogsQuery } from "../features/blog/blogService";
+
 const Blog = () => {
+  // Use the useGetBlogsQuery hook to fetch blogs
+  const { data: blogs, error, isLoading } = useGetBlogsQuery();
 
-  const dispatch = useDispatch()
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  useEffect(() => {
-    dispatch(getBlogs())
-  },[])
-
-  const blogState = useSelector((state) => state.blogs.blogs)
+  if (error) {
+    return <div>Error loading blogs</div>;
+  }
 
   return (
     <>
@@ -28,7 +30,7 @@ const Blog = () => {
                 <ul className="ps-0">
                   <li>Watch</li>
                   <li>Tv</li>
-                  <li>camera</li>
+                  <li>Camera</li>
                   <li>Laptop</li>
                 </ul>
               </div>
@@ -36,9 +38,11 @@ const Blog = () => {
           </div>
           <div className="col-9">
             <div className="row">
-              <div className=" mb-3">
-              <BlogCard data = {blogState} />
-              </div>
+              {blogs?.map((blog, index) => (
+                <div className="mb-3" key={index}>
+                  <BlogCard data={blog} />
+                </div>
+              ))}
             </div>
           </div>
         </div>

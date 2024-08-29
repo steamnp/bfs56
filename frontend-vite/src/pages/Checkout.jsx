@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
-// import watch from '../images/watch.jpg';
 import Container from "../components/Container";
 import {
-  createOrder,
-  emptyCart,
-  getCart,
-} from "../features/products/productsSlice";
-import { useDispatch, useSelector } from "react-redux";
+  useGetCartQuery,
+  useCreateOrderMutation,
+  useEmptyCartMutation,
+} from "../features/products/productsService";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import axios from "axios";
-import { Token } from "../utils/tokenConfig";
 import Loader from "../components/Loader";
+import { Token } from "../utils/tokenConfig";
 
 const shippingSchema = yup.object({
   firstName: yup.string().required("First Name is Required"),
@@ -27,60 +24,45 @@ const shippingSchema = yup.object({
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const token = Token();
+
+  const { data: cartProducts, refetch } = useGetCartQuery();
+  const [createOrder, { isLoading: isCreatingOrder }] =
+    useCreateOrderMutation();
+  const [emptyCart] = useEmptyCartMutation();
 
   const [subTotal, setSubTotal] = useState();
   const [orderItems, setOrderItems] = useState([]);
-  const [loading, setLoading] = useState(false);
   const shippingCost = 150;
 
-  const token = Token();
-
-  //fetching products in the cart
+  // Fetch cart products
   useEffect(() => {
-    dispatch(getCart());
-  }, []);
+    refetch();
+  }, [refetch]);
 
-  const cartProducts = useSelector((state) => state.products.cartProducts);
-
-  //all products pushed into the orderItems array for creating an order
-
-  //to find the total cart amount
+  // Calculate the subtotal
   useEffect(() => {
-    let sum = 0;
-    for (let index = 0; index < cartProducts?.length; index++) {
-      sum = sum + cartProducts[index].price * cartProducts[index].quantity;
+    if (cartProducts) {
+      let sum = 0;
+      cartProducts.forEach((item) => {
+        sum += item.price * item.quantity;
+      });
       setSubTotal(sum);
     }
-  }, []);
+  }, [cartProducts]);
 
-  //payment gatway configuration
-  const loadScript = (src) => {
-    return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.onload = () => {
-        resolve(true);
-      };
-      script.onerror = () => {
-        resolve(false);
-      };
-      document.body.appendChild(script);
-    });
-  };
-
+  // Prepare order items
   useEffect(() => {
-    let items = [];
-    for (let index = 0; index < cartProducts?.length; index++) {
-      items.push({
-        product: cartProducts[index]?.productId?._id,
-        color: cartProducts[index]?.color?._id,
-        quantity: cartProducts[index]?.quantity,
-        price: cartProducts[index]?.price,
-      });
+    if (cartProducts) {
+      const items = cartProducts.map((item) => ({
+        product: item.productId._id,
+        color: item.color._id,
+        quantity: item.quantity,
+        price: item.price,
+      }));
+      setOrderItems(items);
     }
-    setOrderItems(items);
-  }, []);
+  }, [cartProducts]);
 
   const formik = useFormik({
     initialValues: {
@@ -94,106 +76,105 @@ const Checkout = () => {
       others: "",
     },
     validationSchema: shippingSchema,
-    onSubmit: (values) => {
-      setLoading(true);
-      localStorage.setItem("address", JSON.stringify(values));
-
-      setTimeout(() => {
-        checkoutHandler();
-        setLoading(false);
-      }, 3000);
-    },
-  });
-
-  const checkoutHandler = async () => {
-    const res = await loadScript(
-      "https://checkout.razorpay.com/v1/checkout.js"
-    );
-    if (!res) {
-      alert("Razorpay SDK failed to load");
-      return;
-    }
-    const result = await axios.post(
-      "http://localhost:5000/api/user/order/checkout",
-      { amount: subTotal + shippingCost },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+    onSubmit: async (values) => {
+      const res = await loadScript(
+        "https://checkout.razorpay.com/v1/checkout.js"
+      );
+      if (!res) {
+        alert("Razorpay SDK failed to load");
+        return;
       }
-    );
-    if (!result) {
-      alert("Something went wrong");
-      return;
-    }
-    const { amount, id: order_id, currency } = result.data.order;
 
-    const options = {
-      key: "rzp_test_AzgIH0PE6NUeqn",
-      amount: amount,
-      currency: currency,
-      name: "Creative",
-      description: "Test Transaction",
-      order_id: order_id,
-      handler: async function (response) {
-        const data = {
-          orderCreationId: order_id,
-          razorpayPaymentId: response.razorpay_payment_id,
-          razorpayOrderId: response.razorpay_order_id,
-        };
-
-        const result = await axios.post(
-          "http://localhost:5000/api/user/order/paymentverification",
-          data,
+      try {
+        const result = await fetch(
+          "http://localhost:5000/api/user/order/checkout",
           {
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
+            body: JSON.stringify({ amount: subTotal + shippingCost }),
           }
-        );
+        ).then((res) => res.json());
 
-        localStorage.setItem("payment", JSON.stringify(result?.data));
+        const { amount, id: order_id, currency } = result.order;
 
-        setTimeout(() => {
-          dispatch(
-            createOrder({
-              shippingInfo: JSON.parse(localStorage.getItem("address")),
-              paymentInfo: JSON.parse(localStorage.getItem("payment")),
+        const options = {
+          key: "rzp_test_AzgIH0PE6NUeqn",
+          amount: amount,
+          currency: currency,
+          name: "Creative",
+          description: "Test Transaction",
+          order_id: order_id,
+          handler: async function (response) {
+            const data = {
+              orderCreationId: order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpayOrderId: response.razorpay_order_id,
+            };
+
+            const paymentResult = await fetch(
+              "http://localhost:5000/api/user/order/paymentverification",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(data),
+              }
+            ).then((res) => res.json());
+
+            localStorage.setItem("payment", JSON.stringify(paymentResult));
+
+            await createOrder({
+              shippingInfo: values,
+              paymentInfo: paymentResult,
               totalPrice: subTotal + shippingCost,
               totalPriceAfterDiscount: subTotal,
               orderItems,
               shippingCost,
-            })
-          );
-          dispatch(emptyCart());
-          localStorage.removeItem("address");
-          localStorage.removeItem("payment");
-          navigate("/myorders");
-        }, 1000);
-      },
-      prefill: {
-        name: "Creative Clothing Inc",
-        email: "creativeclothing@gmail.com",
-        contact: "784-457-875",
-      },
-      notes: {
-        address: "Creative Clothing Pvt Ltd, Kochi, Kerala",
-      },
-      theme: {
-        color: "#61dafb",
-      },
-    };
+            }).unwrap();
 
-    const paymentObject = new window.Razorpay(options);
-    paymentObject.open();
+            await emptyCart().unwrap();
+            localStorage.removeItem("address");
+            localStorage.removeItem("payment");
+            navigate("/myorders");
+          },
+          prefill: {
+            name: "Creative Clothing Inc",
+            email: "creativeclothing@gmail.com",
+            contact: "784-457-875",
+          },
+          notes: {
+            address: "Creative Clothing Pvt Ltd, Kochi, Kerala",
+          },
+          theme: {
+            color: "#61dafb",
+          },
+        };
+
+        const paymentObject = new window.Razorpay(options);
+        paymentObject.open();
+      } catch (error) {
+        alert("Something went wrong");
+      }
+    },
+  });
+
+  const loadScript = (src) => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
   };
 
   return (
     <>
-     
-
       <Container class1="checkout-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-7">
@@ -217,7 +198,7 @@ const Checkout = () => {
                     Information
                   </li>
                   &nbsp; /&nbsp;
-                  <li className="breadcrumb-item  total-priceactive">
+                  <li className="breadcrumb-item total-price active">
                     Shipping
                   </li>
                   &nbsp; /
@@ -244,15 +225,14 @@ const Checkout = () => {
                     name="country"
                     className="form-control form-select"
                     id="countrySelect"
-                    onChange={formik.handleChange("country")}
-                    onBlur={formik.handleBlur("country")}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     value={formik.values.country}
                   >
-                    <option value="" selected disabled>
-                      {" "}
+                    <option value="" disabled>
                       Select Country
                     </option>
-                    <option value="canada">India</option>
+                    <option value="india">India</option>
                     <option value="usa">United States</option>
                     <option value="uk">United Kingdom</option>
                     <option value="australia">Australia</option>
@@ -269,8 +249,8 @@ const Checkout = () => {
                     className="form-control"
                     name="firstName"
                     value={formik.values.firstName}
-                    onChange={formik.handleChange("firstName")}
-                    onBlur={formik.handleBlur("firstName")}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
                   <div className="error ms-2 my-1">
                     {formik.touched.firstName && formik.errors.firstName}
@@ -282,9 +262,9 @@ const Checkout = () => {
                     placeholder="Last Name"
                     className="form-control"
                     name="lastName"
-                    onChange={formik.handleChange("lastName")}
-                    onBlur={formik.handleBlur("lastName")}
                     value={formik.values.lastName}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
                   <div className="error ms-2 my-1">
                     {formik.touched.lastName && formik.errors.lastName}
@@ -296,9 +276,9 @@ const Checkout = () => {
                     placeholder="Address"
                     className="form-control"
                     name="address"
-                    onChange={formik.handleChange("address")}
-                    onBlur={formik.handleBlur("address")}
                     value={formik.values.address}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
                   <div className="error ms-2 my-1">
                     {formik.touched.address && formik.errors.address}
@@ -307,135 +287,102 @@ const Checkout = () => {
                 <div className="w-100">
                   <input
                     type="text"
-                    placeholder="Apartment, Suite, etc(optional)"
-                    className="form-control"
-                    name="others"
-                    onChange={formik.handleChange("others")}
-                    onBlur={formik.handleBlur("others")}
-                    value={formik.values.others}
-                  />
-                  <div className="error ms-2 my-1">
-                    {formik.touched.others && formik.errors.others}
-                  </div>
-                </div>
-                <div className="flex-grow-1">
-                  <input
-                    type="text"
                     placeholder="City"
                     className="form-control"
                     name="city"
-                    onChange={formik.handleChange("city")}
-                    onBlur={formik.handleBlur("city")}
                     value={formik.values.city}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
                   <div className="error ms-2 my-1">
                     {formik.touched.city && formik.errors.city}
                   </div>
                 </div>
+                <div className="w-100">
+                  <input
+                    type="text"
+                    placeholder="Pin Code"
+                    className="form-control"
+                    name="pin"
+                    value={formik.values.pin}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  <div className="error ms-2 my-1">
+                    {formik.touched.pin && formik.errors.pin}
+                  </div>
+                </div>
                 <div className="flex-grow-1">
-                  <select
+                  <input
+                    type="text"
+                    placeholder="State"
+                    className="form-control"
                     name="state"
-                    className="form-control form-select"
-                    id="countrySelect"
-                    onChange={formik.handleChange("state")}
-                    onBlur={formik.handleBlur("state")}
                     value={formik.values.state}
-                  >
-                    <option value="" selected disabled>
-                      {" "}
-                      Select State
-                    </option>
-                    <option value="maharashtra">Maharashtra</option>
-                    <option value="tamilnadu">Tamil Nadu</option>
-                    <option value="karnataka">Karnataka</option>
-                    <option value="delhi">Delhi</option>
-                    <option value="uttarpradesh">Kerala</option>
-                  </select>
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
                   <div className="error ms-2 my-1">
                     {formik.touched.state && formik.errors.state}
                   </div>
                 </div>
                 <div className="flex-grow-1">
                   <input
-                    type="number"
-                    placeholder="Pincode"
+                    type="text"
+                    placeholder="Country"
                     className="form-control"
-                    name="pin"
-                    onChange={formik.handleChange("pin")}
-                    onBlur={formik.handleBlur("pin")}
-                    value={formik.values.pin}
+                    name="country"
+                    value={formik.values.country}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
                   <div className="error ms-2 my-1">
-                    {formik.touched.pin && formik.errors.pin}
+                    {formik.touched.country && formik.errors.country}
                   </div>
                 </div>
                 <div className="w-100">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <Link to="/cart" className="text-dark">
-                      <BiArrowBack className="me-2" /> Return to cart
-                    </Link>
-                    <button className="button d-flex" type="submit">
-                      {loading ?  <Loader type="bubbles" color="#FFFFFF" /> : "Proceed to Payment"}
-                    </button>
+                  <textarea
+                    rows="5"
+                    placeholder="Additional Information"
+                    className="form-control"
+                    name="others"
+                    value={formik.values.others}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  <div className="error ms-2 my-1">
+                    {formik.touched.others && formik.errors.others}
                   </div>
                 </div>
+                <button
+                  type="submit"
+                  className="btn btn-dark border-0"
+                  disabled={isCreatingOrder}
+                >
+                  {isCreatingOrder ? "Processing" : "Pay"}
+                </button>
               </form>
             </div>
           </div>
           <div className="col-5">
-            <div className="border-bottom py-4">
-              {cartProducts?.map((item, index) => {
-                return (
-                  <div
-                    className="d-flex gap-10 mb-2 align-items-center"
-                    key={index}
-                  >
-                    <div className="w-75 d-flex gap-10">
-                      <div className="w-25 position-relative">
-                        <span
-                          style={{ top: "-10px", right: "2px" }}
-                          className="badge bg-secondary test-white rounded-circle p-2 position-absolute"
-                        >
-                          {item?.quantity}
-                        </span>
-                        <img
-                          className="img-fluid"
-                          src={
-                            item?.productId?.images[0]
-                              ? item?.productId?.images[0]
-                              : "https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg"
-                          }
-                          alt="product"
-                        />
-                      </div>
-                      <div>
-                        <h5 className="total-price">
-                          {item?.productId?.title}
-                        </h5>
-                        <p className="total-price">{item?.productId?.price}</p>
-                      </div>
-                    </div>
-                    <div className="flex-grow-1">
-                      <h5 className="total">₹{item?.price * item?.quantity}</h5>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="border-bottom py-4">
-              <div className="d-flex justify-content-between align-items-center">
+            <div className="checkout-right-data">
+              <h4 className="title">Order Summary</h4>
+              <div className="d-flex justify-content-between py-3">
                 <p className="total">Subtotal</p>
-                <p className="total-price">₹{subTotal}</p>
+                <p className="total">{subTotal ? `₹${subTotal}` : "₹0"}</p>
               </div>
-              <div className="d-flex justify-content-between align-items-center">
-                <p className="mb-0 total">Shipping</p>
-                <p className="mb-0 total-price">₹{shippingCost}</p>
+              <div className="d-flex justify-content-between py-3">
+                <p className="total">Shipping</p>
+                <p className="total">
+                  {shippingCost ? `₹${shippingCost}` : "₹0"}
+                </p>
               </div>
-            </div>
-            <div className="d-flex justify-content-between align-items-center border-bottom py-4">
-              <h4 className="total">Total</h4>
-              <h5 className="total-price">₹{subTotal + shippingCost}</h5>
-              
+              <div className="d-flex justify-content-between py-3">
+                <p className="total">Total</p>
+                <p className="total">
+                  {subTotal ? `₹${subTotal + shippingCost}` : "₹0"}
+                </p>
+              </div>
             </div>
           </div>
         </div>

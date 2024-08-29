@@ -1,72 +1,61 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
-import { useDispatch, useSelector } from "react-redux";
-import { getCart, getProducts } from "../features/products/productsSlice";
+import { Typeahead } from "react-bootstrap-typeahead";
+import "react-bootstrap-typeahead/css/Typeahead.css";
+import {
+  useGetProductsQuery,
+  useGetCartQuery,
+} from "../features/products/productsService";
 import { IoIosLogOut } from "react-icons/io";
 import { FaShippingFast } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
-import { Typeahead } from "react-bootstrap-typeahead";
-import "react-bootstrap-typeahead/css/Typeahead.css";
 
 // import cart from '../images/cart.svg'
 // import user from '../images/user2.svg'
+
 const Header = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const getUserFromLocalStorage = JSON.parse(localStorage.getItem("user"));
 
-  const products = useSelector((state) => state?.products?.products);
+  // Fetch products and cart data
+  const { data: products = [], isSuccess: productsSuccess } =
+    useGetProductsQuery();
+  const { data: cartProducts = [], isSuccess: cartSuccess } = useGetCartQuery();
 
-  const [subTotal, setSubTotal] = useState(null);
+  const [subTotal, setSubTotal] = useState(0);
   const [productOpt, setProductOpt] = useState([]);
-  const [logout, setLogout] = useState(false);
   const [paginate, setPaginate] = useState(true);
-  const [cartLength, setCartLength] = useState(0);
-
-  const cartProducts = useSelector((state) => state?.products?.cartProducts);
-
-  const cartStatus = useSelector((state) => state?.products);
 
   useEffect(() => {
-    if (getUserFromLocalStorage !== null) {
-      dispatch(getCart());
+    if (productsSuccess) {
+      // Prepare typeahead options based on products
+      const typeHeadData = products.map((element, index) => ({
+        id: index,
+        prod: element._id,
+        name: element.title,
+      }));
+      setProductOpt(typeHeadData);
+    }
+  }, [productsSuccess, products]);
+
+  useEffect(() => {
+    if (cartSuccess) {
+      // Calculate the subtotal
+      const sum = cartProducts.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0
+      );
+      setSubTotal(sum);
     } else {
       setSubTotal(0);
     }
-  }, [logout]);
-
-  useEffect(() => {
-    dispatch(getProducts());
-  }, []);
+  }, [cartSuccess, cartProducts]);
 
   const handleLogout = () => {
     localStorage.clear();
-    setLogout(true);
+    navigate("/login");
   };
-
-  //for accumulating products into a new array for typehead
-  useEffect(() => {
-    let typeHeadData = [];
-    for (let index = 0; index < products?.length; index++) {
-      const element = products[index];
-      typeHeadData.push({
-        id: index,
-        prod: element?._id,
-        name: element?.title,
-      });
-    }
-    setProductOpt(typeHeadData);
-  }, [products]);
-
-  //for showing total cart amount at the cart icon in the top
-  useEffect(() => {
-    let sum = 0;
-    for (let index = 0; index < cartProducts?.length; index++) {
-      sum = sum + cartProducts[index]?.price * cartProducts[index]?.quantity;
-      setSubTotal(sum);
-    }
-  }, [cartProducts]);
 
   return (
     <>
@@ -109,7 +98,9 @@ const Header = () => {
                   options={productOpt}
                   minLength={2}
                   onChange={(selected) => {
-                    navigate(`/product/${selected[0]?.prod}`);
+                    if (selected.length > 0) {
+                      navigate(`/product/${selected[0]?.prod}`);
+                    }
                   }}
                   placeholder="Search for products..."
                 />
@@ -145,17 +136,15 @@ const Header = () => {
                 <div>
                   {getUserFromLocalStorage === null ? (
                     <div>
-                      {" "}
                       <Link
                         to={"/login"}
                         className="d-flex align-items-center gap-10  text-white"
                       >
                         <img src="images/user2.svg" alt="User" />
-
                         <p className="mb-0">
                           Login <br /> My Account{" "}
                         </p>
-                      </Link>{" "}
+                      </Link>
                     </div>
                   ) : (
                     <div>
@@ -187,13 +176,14 @@ const Header = () => {
                             <FaShippingFast /> My Orders
                           </Link>
                         </li>
-                        <div onClick={handleLogout}>
-                          <li>
-                            <Link className="dropdown-item fs-6" to="">
-                              <IoIosLogOut /> Logout
-                            </Link>
-                          </li>
-                        </div>
+                        <li>
+                          <button
+                            className="dropdown-item fs-6"
+                            onClick={handleLogout}
+                          >
+                            <IoIosLogOut /> Logout
+                          </button>
+                        </li>
                       </ul>
                     </div>
                   )}
@@ -255,19 +245,16 @@ const Header = () => {
                           Computers & Laptops
                         </Link>
                       </li>
-
                       <li>
                         <Link className="dropdown-item text-white" to="">
                           Smart Watches
                         </Link>
                       </li>
-
                       <li>
                         <Link className="dropdown-item text-white" to="">
                           Smartphones & Tablets
                         </Link>
                       </li>
-
                       <li>
                         <Link
                           className="dropdown-item text-white"
@@ -276,13 +263,11 @@ const Header = () => {
                           Audio & Headphones
                         </Link>
                       </li>
-
                       <li>
                         <Link className="dropdown-item text-white" to="">
                           TV & Home Entertainment
                         </Link>
                       </li>
-
                       <li>
                         <Link className="dropdown-item text-white" to="">
                           Drones & Accessories
@@ -293,10 +278,38 @@ const Header = () => {
                 </div>
                 <div className="menu-links">
                   <div className="d-flex align-items-center gap-15">
-                    <NavLink to="/">Home</NavLink>
-                    <NavLink to="/product">Our Store</NavLink>
-                    <NavLink to="/blogs">Blogs</NavLink>
-                    <NavLink to="/contact">Contact</NavLink>
+                    <NavLink
+                      to="/"
+                      className={({ isActive }) =>
+                        isActive ? "text-white" : "text-light"
+                      }
+                    >
+                      Home
+                    </NavLink>
+                    <NavLink
+                      to="/about"
+                      className={({ isActive }) =>
+                        isActive ? "text-white" : "text-light"
+                      }
+                    >
+                      About
+                    </NavLink>
+                    <NavLink
+                      to="/contact"
+                      className={({ isActive }) =>
+                        isActive ? "text-white" : "text-light"
+                      }
+                    >
+                      Contact
+                    </NavLink>
+                    <NavLink
+                      to="/products"
+                      className={({ isActive }) =>
+                        isActive ? "text-white" : "text-light"
+                      }
+                    >
+                      Products
+                    </NavLink>
                   </div>
                 </div>
               </div>

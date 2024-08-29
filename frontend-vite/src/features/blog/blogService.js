@@ -1,37 +1,31 @@
-import axios from "axios";
+// features/blog/blogApi.js
+
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { base_url } from "../../utils/base-url";
 import { Token } from "../../utils/tokenConfig";
 
 const token = Token();
 
-const getBlogs = async () => {
-  try {
-    const response = await axios.get(`${base_url}blog/`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+export const blogApi = createApi({
+  reducerPath: "blogApi",
+  baseQuery: fetchBaseQuery({
+    baseUrl: base_url,
+    prepareHeaders: (headers) => {
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      headers.set("Content-Type", "application/json");
+      return headers;
+    },
+  }),
+  endpoints: (builder) => ({
+    getBlogs: builder.query({
+      query: () => "blog/",
+    }),
+    getAblog: builder.query({
+      query: (id) => `blog/${id}`,
+    }),
+  }),
+});
 
-    return response.data;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
-const getAblog = async(id) => {
-    try{
-        const response = await axios.get(`${base_url}blog/${id}`)
-        if(response)
-        {
-            return response.data;
-        }
-    }
-    catch(error)
-    {
-        throw new Error(error)
-    }
-}
-
-const blogService = { getBlogs, getAblog };
-export default blogService;
+export const { useGetBlogsQuery, useGetAblogQuery } = blogApi;

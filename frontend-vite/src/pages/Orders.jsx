@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import Container from "../components/Container";
-import { useDispatch, useSelector } from "react-redux";
-import { getOrders } from "../features/products/productsSlice";
-
-// ... (your imports)
+import { useGetOrdersQuery } from "../features/products/productsService";
 
 const Orders = () => {
-  const dispatch = useDispatch();
+  const { data: myOrders, isLoading, error } = useGetOrdersQuery();
 
-  useEffect(() => {
-    dispatch(getOrders());
-  }, []);
-
-  const myOrders = useSelector((state) => state.products?.myOrders);
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <>
@@ -33,7 +27,6 @@ const Orders = () => {
             {myOrders &&
               myOrders.map(
                 (item, index) =>
-                  // Using parentheses to return an array of JSX elements
                   item &&
                   item.orderItems.map((i, k) => (
                     <div

@@ -1,83 +1,65 @@
 import React, { useEffect, useState } from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
-import ReactStars from "react-rating-stars-component";
 import ProductCard from "../components/ProductCard";
-import Color from "../components/Color";
 import Container from "../components/Container";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  
-  getProductsOnQuery,
-} from "../features/products/productsSlice";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useGetProductsOnQueryQuery } from "../features/products/productsService";
+import { useLocation } from "react-router-dom";
 
 const OurStore = () => {
   const [grid, setGrid] = useState(4);
+  const [newBrand, setNewBrand] = useState([]);
+  const [newCategory, setNewCategory] = useState([]);
+  const [newTag, setNewTag] = useState([]);
 
-  const dispatch = useDispatch();
+  const [category, setCategory] = useState("");
+  const [tag, setTag] = useState("");
+  const [brand, setBrand] = useState("");
+
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const tagValue = queryParams.get("tag");
   const catValue = queryParams.get("category");
 
-  useEffect(() => {
-    dispatch(getProductsOnQuery({tag: tagValue, category: catValue,}));
-  }, []);
-
-  const productsState = useSelector((state) => state.products.products);
-  const productsQuery = useSelector((state) => state.products.productsQuery.item)
-  
-
-  const [newBrand, setNewBrand] = useState([]);
-  const [newCategory, setNewCategory] = useState([]);
-  const [newTag, setNewTag] = useState([]);
-
-  const [brand, setBrand] = useState("");
-  const [category, setCategory] = useState("");
-  const [tag, setTag] = useState("");
+  const { data: products, isSuccess } = useGetProductsOnQueryQuery({
+    tag: tagValue,
+    category: catValue,
+  });
 
   useEffect(() => {
-    let brandSet = new Set();
-    let categorySet = new Set();
-    let tagSet = new Set();
+    if (isSuccess) {
+      let brandSet = new Set();
+      let categorySet = new Set();
+      let tagSet = new Set();
 
-    for (let index = 0; index < productsState?.length; index++) {
-      const element = productsState[index];
-      brandSet.add(element?.brand?.title);
-      categorySet.add(element?.category?.title);
-      tagSet.add(element?.tag);
+      products?.forEach((element) => {
+        if (element?.brand?.title) brandSet.add(element?.brand?.title);
+        if (element?.category?.title) categorySet.add(element?.category?.title);
+        if (element?.tag) tagSet.add(element?.tag);
+      });
+
+      setNewBrand([...brandSet]);
+      setNewCategory([...categorySet]);
+      setNewTag([...tagSet]);
     }
-
-    // Use spread operator to convert sets back to arrays
-    setNewBrand([...brandSet]);
-    setNewCategory([...categorySet]);
-    setNewTag([...tagSet]);
-  }, [productsState]);
-
-  // console.log(newBrand);
-  // console.log(newCategory);
-  
+  }, [products, isSuccess]);
 
   return (
     <>
-      <Meta title={"Our Store"} />
-      <BreadCrumb title="Our store" />
+      <Meta title="Our Store" />
+      <BreadCrumb title="Our Store" />
       <Container class1="store-wrapper home-wrapper-2 py-5">
         <div className="row">
           <div className="col-3">
             <div className="filter-card mb-3">
-              <h3 className="filter-title">Shop By categories</h3>
+              <h3 className="filter-title">Shop By Categories</h3>
               <div>
                 <ul className="ps-0">
-                  {newCategory &&
-                    newCategory?.map((item, index) => {
-                      return (
-                        <li key={index} onClick={(item) => setCategory(item)}>
-                          {item}
-                        </li>
-                      );
-                    })}
+                  {newCategory?.map((item, index) => (
+                    <li key={index} onClick={() => setCategory(item)}>
+                      {item}
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -87,21 +69,21 @@ const OurStore = () => {
                 <div className="d-flex align-items-center gap-10">
                   <div className="form-floating">
                     <input
-                      type="email"
+                      type="number"
                       className="form-control"
-                      id="floatingInput"
+                      id="floatingInputFrom"
                       placeholder="From"
                     />
-                    <label htmlFor="floatingInput">From</label>
+                    <label htmlFor="floatingInputFrom">From</label>
                   </div>
                   <div className="form-floating">
                     <input
-                      type="email"
+                      type="number"
                       className="form-control"
-                      id="floatingInput"
+                      id="floatingInputTo"
                       placeholder="To"
                     />
-                    <label htmlFor="floatingInput">To</label>
+                    <label htmlFor="floatingInputTo">To</label>
                   </div>
                 </div>
               </div>
@@ -110,18 +92,15 @@ const OurStore = () => {
               <h3 className="filter-title">Product Tags</h3>
               <div>
                 <div className="product-tags d-flex flex-wrap align-items-center gap-10">
-                  {newTag &&
-                    newTag?.map((item, index) => {
-                      return (
-                        <span
-                          className="bagde bg-light text-secondary rounded-3 py-2 px-3"
-                          key={index}
-                          onClick={(item) => setTag(item)}
-                        >
-                          {item}
-                        </span>
-                      );
-                    })}
+                  {newTag?.map((item, index) => (
+                    <span
+                      className="badge bg-light text-secondary rounded-3 py-2 px-3"
+                      key={index}
+                      onClick={() => setTag(item)}
+                    >
+                      {item}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
@@ -129,18 +108,15 @@ const OurStore = () => {
               <h3 className="filter-title">Product Brands</h3>
               <div>
                 <div className="product-tags d-flex flex-wrap align-items-center gap-10">
-                  {newBrand &&
-                    newBrand?.map((item, index) => {
-                      return (
-                        <span
-                          className="bagde bg-light text-secondary rounded-3 py-2 px-3"
-                          key={index}
-                          onClick={(item) => setBrand(item)}
-                        >
-                          {item}
-                        </span>
-                      );
-                    })}
+                  {newBrand?.map((item, index) => (
+                    <span
+                      className="badge bg-light text-secondary rounded-3 py-2 px-3"
+                      key={index}
+                      onClick={() => setBrand(item)}
+                    >
+                      {item}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
@@ -173,37 +149,29 @@ const OurStore = () => {
                 </div>
                 <div className="d-flex align-items-center gap-10">
                   <p className="totalproducts mb-0">
-                    {productsState.length} Products
+                    {products?.length} Products
                   </p>
                   <div className="d-flex gap-10 align-items-center grid">
                     <img
-                      onClick={() => {
-                        setGrid(3);
-                      }}
+                      onClick={() => setGrid(3)}
                       src="images/gr4.svg"
                       className="d-block img-fluid"
                       alt="grid"
                     />
                     <img
-                      onClick={() => {
-                        setGrid(4);
-                      }}
+                      onClick={() => setGrid(4)}
                       src="images/gr3.svg"
                       className="d-block img-fluid"
                       alt="grid"
                     />
                     <img
-                      onClick={() => {
-                        setGrid(6);
-                      }}
+                      onClick={() => setGrid(6)}
                       src="images/gr2.svg"
                       className="d-block img-fluid"
                       alt="grid"
                     />
                     <img
-                      onClick={() => {
-                        setGrid(12);
-                      }}
+                      onClick={() => setGrid(12)}
                       src="images/gr.svg"
                       className="d-block img-fluid"
                       alt="grid"
@@ -214,9 +182,9 @@ const OurStore = () => {
             </div>
             <div className="products-list pb-5">
               <div className="d-flex gap-10 flex-wrap">
-                {productsQuery?.map((item, index) => {
-                  return <ProductCard data={item} grid={grid} key={index} />;
-                })}
+                {products?.map((item, index) => (
+                  <ProductCard data={item} grid={grid} key={index} />
+                ))}
               </div>
             </div>
           </div>

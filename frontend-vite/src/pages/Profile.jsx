@@ -1,13 +1,12 @@
-// UserProfile.js
-
 import React, { useState } from "react";
 import { FaUserEdit } from "react-icons/fa"; // Import the edit icon
-import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { getUserFromLocalStorage } from "../utils/tokenConfig";
-import { updateUser } from "../features/auth/authSlice";
+import { useUpdateUserMutation } from "../features/auth/authService"; // Import the hook
 
 const Profile = () => {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [updateUser] = useUpdateUserMutation(); // Use the hook for updating user
 
   const userProfile = getUserFromLocalStorage();
   console.log(userProfile);
@@ -21,16 +20,28 @@ const Profile = () => {
 
   const [user, setUser] = useState(initialUser);
   const [isEditing, setIsEditing] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const handleEditClick = () => {
     setIsEditing(!isEditing);
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
     setIsEditing(false);
-    dispatch(updateUser({firstName:user.firstName, lastname:user.lastName, email:user.email, mobile:user.mobile}))
-    
-    
+    setIsUpdating(true);
+    try {
+      await updateUser({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        mobile: user.mobile,
+      }).unwrap(); // Use unwrap() to handle the promise result or error
+      navigate("/profile"); // Optional: navigate or show a success message
+    } catch (error) {
+      console.error("Update failed:", error); // Handle errors as needed
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -121,8 +132,9 @@ const Profile = () => {
           className="btn"
           style={{ backgroundColor: "#febd69", borderColor: "#febd69" }}
           onClick={isEditing ? handleSaveClick : handleEditClick}
+          disabled={isUpdating} // Disable button while updating
         >
-          {isEditing ? "Save" : <FaUserEdit />}
+          {isUpdating ? "Saving..." : isEditing ? "Save" : <FaUserEdit />}
         </button>
       </div>
     </div>

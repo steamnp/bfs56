@@ -1,30 +1,27 @@
 import React, { useEffect } from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
-
 import Container from "../components/Container";
 import CustomInput from "../components/CustomInput";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import { useRegisterUserMutation } from "../features/auth/authService"; // Import the hook
 
 const validationSchema = Yup.object({
   firstname: Yup.string().required("First name is required"),
-  lastname: Yup.string().required("last name is required"),
-  email: Yup.string().email("Please give a valid email"),
+  lastname: Yup.string().required("Last name is required"),
+  email: Yup.string()
+    .email("Please give a valid email")
+    .required("Email is required"),
   mobile: Yup.number().required("Mobile is required"),
   password: Yup.string().required("Password is required"),
 });
 
 const Signup = () => {
-  const dispatch = useDispatch();
+  const [registerUser, { data, isLoading, isError, isSuccess }] =
+    useRegisterUserMutation(); // Use the hook
   const navigate = useNavigate();
-
-  const signedUpUser = useSelector((state) => state?.auth.signedUpUser);
-  console.log(signedUpUser);
-  const authState = useSelector((state) => state?.auth);
 
   const formik = useFormik({
     initialValues: {
@@ -36,16 +33,16 @@ const Signup = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      dispatch(registerUser(values));
+      registerUser(values); // Use the hook to make the API call
     },
   });
 
   useEffect(() => {
-    if (signedUpUser !== null && authState.isError === false) {
+    if (isSuccess) {
       formik.resetForm();
       navigate("/login");
     }
-  }, [authState]);
+  }, [isSuccess, navigate, formik]);
 
   return (
     <>
@@ -65,9 +62,10 @@ const Signup = () => {
                   placeholder="First Name"
                   classname="form-control"
                   type="text"
+                  name="firstname" // Updated to match Formik's name
                   value={formik.values.firstname}
-                  onChange={formik.handleChange("firstname")}
-                  onBlur={formik.handleBlur("firstname")}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
                 <div className="error">
                   {formik.touched.firstname && formik.errors.firstname}
@@ -76,9 +74,10 @@ const Signup = () => {
                   placeholder="Last Name"
                   classname="form-control"
                   type="text"
+                  name="lastname" // Updated to match Formik's name
                   value={formik.values.lastname}
-                  onChange={formik.handleChange("lastname")}
-                  onBlur={formik.handleBlur("lastname")}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
                 <div className="error">
                   {formik.touched.lastname && formik.errors.lastname}
@@ -86,10 +85,11 @@ const Signup = () => {
                 <CustomInput
                   placeholder="Email"
                   classname="form-control"
-                  type="text"
+                  type="email" // Changed from text to email for validation
+                  name="email" // Updated to match Formik's name
                   value={formik.values.email}
-                  onChange={formik.handleChange("email")}
-                  onBlur={formik.handleBlur("email")}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
                 <div className="error">
                   {formik.touched.email && formik.errors.email}
@@ -98,37 +98,33 @@ const Signup = () => {
                   placeholder="Mobile"
                   classname="form-control"
                   type="number"
+                  name="mobile" // Updated to match Formik's name
                   value={formik.values.mobile}
-                  onChange={formik.handleChange("mobile")}
-                  onBlur={formik.handleBlur("mobile")}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
                 <div className="error">
                   {formik.touched.mobile && formik.errors.mobile}
                 </div>
                 <CustomInput
-                  placeholder="password"
+                  placeholder="Password"
                   classname="form-control"
                   type="password"
+                  name="password" // Updated to match Formik's name
                   value={formik.values.password}
-                  onChange={formik.handleChange("password")}
-                  onBlur={formik.handleBlur("password")}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
                 <div className="error">
                   {formik.touched.password && formik.errors.password}
                 </div>
-                <button className="button border-0" type="submit">
-                  Sign Up
+                <button
+                  className="button border-0"
+                  type="submit"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Signing Up..." : "Sign Up"}
                 </button>
-                {/* <div>
-                  <div className="mt-3 d-flex justify-content-center gap-15 align-items-center">
-                    <button className="button border-0" type="submit">
-                      Sign Up
-                    </button>
-                    <Link to="/signup" className="button signup" type="submit">
-                      SignUp
-                    </Link>
-                  </div>
-                </div> */}
               </form>
             </div>
           </div>

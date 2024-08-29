@@ -1,75 +1,59 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import blogService from "./blogService";
+import { createSlice } from "@reduxjs/toolkit";
+import { blogApi } from "./blogService"; // Import the blogApi
 
 const initialState = {
   blogs: [],
+  singleBlog: {},
   isLoading: false,
   isSuccess: false,
   isError: false,
   message: "",
 };
 
-//for fetching all the blogs
-export const getBlogs = createAsyncThunk("blog/all-blogs", async (thunkAPI) => {
-  try {
-    const response = await blogService.getBlogs();
-    return response;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data);
-  }
-});
-
-//for fetching a particular blog
-export const getABlog = createAsyncThunk(
-  "blog/single-blog",
-  async (id, thunkAPI) => {
-    try {
-      const response = await blogService.getAblog(id);
-      return response;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
-  }
-);
-
-export const blogSlice = createSlice({
+const blogSlice = createSlice({
   name: "blogs",
   initialState,
   reducers: {},
-  extraReducers: (builer) => {
-    builer
-      .addCase(getBlogs.pending, (state) => {
+  extraReducers: (builder) => {
+    builder
+      .addMatcher(blogApi.endpoints.getBlogs.matchPending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getBlogs.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        state.blogs = action.payload;
-      })
-      .addCase(getBlogs.rejected, (state, action) => {
-        state.blogs = [];
-        state.isError = true;
-        state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-      })
-      .addCase(getABlog.pending, (state) => {
+      .addMatcher(
+        blogApi.endpoints.getBlogs.matchFulfilled,
+        (state, { payload }) => {
+          state.isLoading = false;
+          state.isSuccess = true;
+          state.blogs = payload;
+        }
+      )
+      .addMatcher(
+        blogApi.endpoints.getBlogs.matchRejected,
+        (state, { error }) => {
+          state.isLoading = false;
+          state.isError = true;
+          state.message = error.message;
+        }
+      )
+      .addMatcher(blogApi.endpoints.getAblog.matchPending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getABlog.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        state.singleBlog = action.payload;
-      })
-      .addCase(getABlog.rejected, (state, action) => {
-        state.singleBlog = [];
-        state.isError = true;
-        state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-      });
+      .addMatcher(
+        blogApi.endpoints.getAblog.matchFulfilled,
+        (state, { payload }) => {
+          state.isLoading = false;
+          state.isSuccess = true;
+          state.singleBlog = payload;
+        }
+      )
+      .addMatcher(
+        blogApi.endpoints.getAblog.matchRejected,
+        (state, { error }) => {
+          state.isLoading = false;
+          state.isError = true;
+          state.message = error.message;
+        }
+      );
   },
 });
 

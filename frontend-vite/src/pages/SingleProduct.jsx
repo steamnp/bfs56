@@ -10,117 +10,37 @@ import Color from "../components/Color";
 import { TbGitCompare } from "react-icons/tb";
 import { AiOutlineHeart } from "react-icons/ai";
 import Container from "../components/Container";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addToCart,
-  getAproduct,
-  getCart,
-  getProducts,
-  writeReview,
-} from "../features/products/productsSlice";
+  useAddToCartMutation,
+  useGetAProductQuery,
+  useGetProductsQuery,
+  useWriteReviewMutation,
+  useAddToWhishListMutation,
+} from "../features/products/productsService";
 import { toast } from "react-toastify";
 
 const validationSchema = Yup.object({
   comment: Yup.string().required("Write something"),
-  star:Yup.number().required("Rate your product")
+  star: Yup.number().required("Rate your product"),
 });
 
 const SingleProduct = () => {
-
-
-
-  const formik = useFormik({
-    initialValues: {
-      comment: "",
-      star:0,
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
- 
-      dispatch(writeReview({prodId:singleProdState?._id,comment:values?.comment,star:values?.star}))
-
-      setTimeout(() => {;
-        window.location.reload();
-        formik.resetForm();
-      }, 2000);
-    },
-  });
-
-
-
-  
-  const [popularProducts, setPopularProducts] = useState([]);
-  console.log(popularProducts);
   const location = useLocation();
-
   const prodId = location.pathname.split("/")[2];
-  // console.log(prodId);
 
-  function uploadCart() {
-    if (color === null) {
-      toast.error("Please select color");
-    } else {
-      dispatch(
-        addToCart({
-          productId: singleProdState?._id,
-          quantity,
-          color: color,
-          price: singleProdState?.price,
-        })
-      );
-    }
-  }
-
-  const dispatch = useDispatch();
-  
-
-  useEffect(() => {
-    dispatch(getAproduct(prodId));
-    dispatch(getProducts());
-  }, []);
-
-  
-
-  const products = useSelector((state) => state?.products?.products);
-
-
-  const singleProdState = useSelector(
-    (state) => state?.products?.singleProduct
-  );
-
-  
-
- 
-  
-
-
+  const [popularProducts, setPopularProducts] = useState([]);
   const [quantity, setQuantity] = useState(0);
-
   const [color, setColor] = useState(null);
 
+  const [writeReview] = useWriteReviewMutation();
+  const [addToWhishList] = useAddToWhishListMutation();
+  const [addToCart] = useAddToCartMutation();
 
+  const { data: singleProdState } = useGetAProductQuery(prodId);
+  const { data: products } = useGetProductsQuery();
 
-// image magnifing component config
-  const props = {
-    width: 400,
-    height: 600,
-    zoomWidth: 600,
-    img: singleProdState?.images[0]
-      ? singleProdState?.images[0]
-      : "https://eas-tech.net/wp-content/uploads/dummy-post-horisontal.jpg",
-  };
-  const [orderedProduct] = useState(true);
-  const copyToClipboard = (text) => {
-    var textField = document.createElement("textarea");
-    textField.innerText = text;
-    document.body.appendChild(textField);
-    textField.select();
-    document.execCommand("copy");
-    textField.remove();
-  };
-
-  //for seperating popular products from the whole product list
   useEffect(() => {
     let data = [];
     for (let index = 0; index < products?.length; index++) {
@@ -130,6 +50,63 @@ const SingleProduct = () => {
     }
     setPopularProducts(data);
   }, [products]);
+
+  const formik = useFormik({
+    initialValues: {
+      comment: "",
+      star: 0,
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      writeReview({
+        prodId: singleProdState?._id,
+        comment: values.comment,
+        star: values.star,
+      })
+        .unwrap()
+        .then(() => {
+          toast.success("Review submitted successfully");
+          formik.resetForm();
+        })
+        .catch(() => {
+          toast.error("Failed to submit review");
+        });
+    },
+  });
+
+  const uploadCart = () => {
+    if (!color) {
+      toast.error("Please select color");
+    } else {
+      addToCart({
+        productId: singleProdState?._id,
+        quantity,
+        color,
+        price: singleProdState?.price,
+      })
+        .unwrap()
+        .then(() => toast.success("Added to cart"))
+        .catch(() => toast.error("Failed to add to cart"));
+    }
+  };
+
+  const copyToClipboard = (text) => {
+    var textField = document.createElement("textarea");
+    textField.innerText = text;
+    document.body.appendChild(textField);
+    textField.select();
+    document.execCommand("copy");
+    textField.remove();
+  };
+
+  const props = {
+    width: 400,
+    height: 600,
+    zoomWidth: 600,
+    img:
+      singleProdState?.images[0] ||
+      "https://eas-tech.net/wp-content/uploads/dummy-post-horisontal.jpg",
+  };
 
   return (
     <>
@@ -144,34 +121,11 @@ const SingleProduct = () => {
               </div>
             </div>
             <div className="other-product-images d-flex flex-wrap gap-15">
-              <div>
-                <img
-                  src="https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                  alt="watch"
-                  className="img-fluid"
-                />
-              </div>
-              <div>
-                <img
-                  src="https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                  alt="watch"
-                  className="img-fluid"
-                />
-              </div>
-              <div>
-                <img
-                  src="https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                  alt="watch"
-                  className="img-fluid"
-                />
-              </div>
-              <div>
-                <img
-                  src="https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                  alt="watch"
-                  className="img-fluid"
-                />
-              </div>
+              {singleProdState?.images.map((image, index) => (
+                <div key={index}>
+                  <img src={image} alt="product" className="img-fluid" />
+                </div>
+              ))}
             </div>
           </div>
           <div className="col-6">
@@ -179,7 +133,6 @@ const SingleProduct = () => {
               <div className="border-bottom">
                 <h3 className="title">{singleProdState?.title}</h3>
               </div>
-
               <div className="border-bottom py-3">
                 <p className="price">₹{singleProdState?.price}</p>
                 <div className="d-flex align-items-center gap-10">
@@ -197,14 +150,17 @@ const SingleProduct = () => {
                 </a>
               </div>
               <div className="border-bottom py-3">
-               
                 <div className="d-flex gap-10 align-items-center my-2">
                   <h3 className="product-heading">Brand :</h3>
-                  <p className="product-data">{singleProdState?.brand?.title}</p>
+                  <p className="product-data">
+                    {singleProdState?.brand?.title}
+                  </p>
                 </div>
                 <div className="d-flex gap-10 align-items-center my-2">
                   <h3 className="product-heading">Category :</h3>
-                  <p className="product-data">{singleProdState?.category?.title}</p>
+                  <p className="product-data">
+                    {singleProdState?.category?.title}
+                  </p>
                 </div>
                 <div className="d-flex gap-10 align-items-center my-2">
                   <h3 className="product-heading">Tags :</h3>
@@ -214,59 +170,57 @@ const SingleProduct = () => {
                   <h3 className="product-heading">Availability :</h3>
                   <p className="product-data">In Stock</p>
                 </div>
-               
                 <div className="d-flex gap-10 flex-column mt-2 mb-3">
                   <h3 className="product-heading">Color</h3>
-                  <div className="d-flex ">
-                  {singleProdState?.color.map((item) => {
-                    return <span  onClick={() => setColor(item?._id)} key={item._id} className="product-data border rounded  p-1 cursor">{item?.title} </span>
-                  })}
+                  <div className="d-flex">
+                    {singleProdState?.color.map((item) => (
+                      <span
+                        key={item._id}
+                        onClick={() => setColor(item._id)}
+                        className={`product-data border rounded p-1 cursor ${
+                          color === item._id ? "selected" : ""
+                        }`}
+                      >
+                        {item.title}
+                      </span>
+                    ))}
                   </div>
                 </div>
-
                 <div className="d-flex align-items-center gap-15 flex-row mt-2 mb-3">
                   <h3 className="product-heading">Quantity :</h3>
-                  
-                    <div className="">
-                      <input
-                        type="number"
-                        value={quantity}
-                        name=""
-                        min={1}
-                        max={10}
-                        className="form-control"
-                        style={{ width: "70px" }}
-                        id=""
-                        onChange={(e) => {
-                          setQuantity(e.target.value);
-                        }}
-                      />
-                    </div>
-                 
+                  <div>
+                    <input
+                      type="number"
+                      value={quantity}
+                      min={1}
+                      max={10}
+                      className="form-control"
+                      style={{ width: "70px" }}
+                      onChange={(e) => setQuantity(e.target.value)}
+                    />
+                  </div>
                   <div className="d-flex align-items-center gap-30 ms-5">
                     <button
                       className="button border-0"
-                      type="submit"
-                      onClick={() => {
-                        uploadCart();
-                      }}
+                      type="button"
+                      onClick={uploadCart}
                     >
-                       Add to cart
+                      Add to cart
                     </button>
                     <button className="button signup">Buy It Now</button>
                   </div>
                 </div>
                 <div className="d-flex align-items-center gap-15">
-                  {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                   <div>
                     <a href="#">
-                      {" "}
                       <TbGitCompare className="fs-5 me-2" /> Compare
                     </a>
                   </div>
-                  {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                   <div>
-                    <a href="#">
+                    <a
+                      href="#"
+                      onClick={() => addToWhishList(singleProdState?._id)}
+                    >
                       <AiOutlineHeart className="fs-5 me-2" />
                       Add to Wishlist
                     </a>
@@ -281,18 +235,14 @@ const SingleProduct = () => {
                 </div>
                 <div className="d-flex gap-10 align-items-center my-2">
                   <h3 className="product-heading">Product Link :</h3>
-                  {/* eslint-disable */}
                   <a
                     href="javascript:void(0);"
                     onClick={() => {
-                      copyToClipboard(
-                        "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                      );
+                      copyToClipboard(window.location.href);
                     }}
                   >
                     Copy Product Link
                   </a>
-                  {/* eslint-enable */}
                 </div>
               </div>
             </div>
@@ -309,92 +259,52 @@ const SingleProduct = () => {
           </div>
         </div>
       </Container>
-      <Container class1="reviews-wrapper home-wrapper-2">
+      <Container class1="review-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 id="review">Reviews</h3>
-            <div className="review-inner-wrapper">
-              <div className="review-head d-flex justify-content-between align-items-end">
-                <div>
-                  <h4 className="mb-2">Customer Reviews</h4>
-                  <div className="d-flex align-items-center gap-10 ">
-                    <ReactStars
-                      count={5}
-                      size={24}
-                      value={Number(singleProdState?.totalrating)}
-                      edit={false}
-                      activeColor="#ffd700"
-                    />
-                    <p className="mb-0">Based on 2 Reviews</p>
-                  </div>
+            <h4>Reviews</h4>
+            <div className="bg-white p-3">
+              <form onSubmit={formik.handleSubmit}>
+                <div className="mb-3">
+                  <label htmlFor="comment" className="form-label">
+                    Comment
+                  </label>
+                  <textarea
+                    id="comment"
+                    name="comment"
+                    className="form-control"
+                    value={formik.values.comment}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.touched.comment && formik.errors.comment ? (
+                    <div className="text-danger">{formik.errors.comment}</div>
+                  ) : null}
                 </div>
-                {orderedProduct && (
-                  <div>
-                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                    <a className="text-dark text-decoration-underline" href="">
-                      Write a Review
-                    </a>
-                  </div>
-                )}
-              </div>
-              <div className="review-form py-4">
-                <h4>Write a Review</h4>
-                <form action="" className="d-flex flex-column gap-15" onSubmit={formik.handleSubmit}>
-                  <div>
-                    <ReactStars
-                      count={5}
-                      size={24}
-                      value={formik.values.star}
-                      edit={true}
-                      name="star"
-                      onChange={(newRating) => formik.setFieldValue("star", newRating)}
-                      onBlur= {formik.handleBlur("star")}
-                      activeColor="#ffd700"
-                    />
-                  </div>
-                  <div>
-                    <textarea
-                      name="comment"
-                      id=""
-                      className="w-100 form-control"
-                      cols="30"
-                      rows="4"
-                      value={formik.values.comment}
-                      onChange={formik.handleChange("comment")}
-                      onBlur={formik.handleBlur("comment")}
-                      placeholder="Comments"
-                    ></textarea>
-                  </div>
-                  <div className="d-flex justify-content-end">
-                    <button className="button border-0" type="submit">Submit Review</button>
-                  </div>
-                </form>
-              </div>
-              <div className="reviews mt-4">
-                <div className="review">
-                  {singleProdState?.ratings ? (
-                    singleProdState?.ratings?.map((item, index) => {
-                      return(
-                      <div key={index}>
-                        <div className="d-flex gap-10 align-items-center">
-                          <h6 className="mb-0">{item?.postedBy?.firstname}</h6>
-                          <ReactStars
-                            count={5}
-                            size={24}
-                            value={item?.star}
-                            edit={false}
-                            activeColor="#ffd700"
-                          />
-                        </div>
-
-                        <p className="mt-3">{item?.comment}</p>
-                      </div>)
-                    })
-                  ) : (
-                    <h4>No Reviews available for this product</h4>
-                  )}
+                <div className="mb-3">
+                  <label htmlFor="star" className="form-label">
+                    Rating
+                  </label>
+                  <ReactStars
+                    id="star"
+                    name="star"
+                    count={5}
+                    size={24}
+                    value={formik.values.star}
+                    onChange={(newRating) =>
+                      formik.setFieldValue("star", newRating)
+                    }
+                    onBlur={formik.handleBlur}
+                    activeColor="#ffd700"
+                  />
+                  {formik.touched.star && formik.errors.star ? (
+                    <div className="text-danger">{formik.errors.star}</div>
+                  ) : null}
                 </div>
-              </div>
+                <button type="submit" className="button border-0">
+                  Submit Review
+                </button>
+              </form>
             </div>
           </div>
         </div>
@@ -402,14 +312,13 @@ const SingleProduct = () => {
       <Container class1="popular-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 className="section-heading">Our Popular Products</h3>
+            <h4>Popular Products</h4>
+            <div className="d-flex flex-wrap">
+              {popularProducts.map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="row">
-          {
-            popularProducts?.map((item, index) => {
-              return <ProductCard data={item} grid={4} key={item?._id} />;
-            })}
         </div>
       </Container>
     </>

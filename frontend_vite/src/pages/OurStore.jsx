@@ -1,63 +1,55 @@
 import React, { useEffect, useState } from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
-import ReactStars from "react-rating-stars-component";
 import ProductCard from "../components/ProductCard";
-import Color from "../components/Color";
 import Container from "../components/Container";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  
-  getProductsOnQuery,
-} from "../features/products/productsSlice";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useGetProductsOnQueryQuery } from "../features/products/productsService"; // Updated import
+import { useLocation } from "react-router-dom";
 
 const OurStore = () => {
   const [grid, setGrid] = useState(4);
 
-  const dispatch = useDispatch();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const tagValue = queryParams.get("tag");
   const catValue = queryParams.get("category");
 
-  useEffect(() => {
-    dispatch(getProductsOnQuery({tag: tagValue, category: catValue,}));
-  }, []);
-
-  const productsState = useSelector((state) => state.products.products);
-  const productsQuery = useSelector((state) => state.products.productsQuery.item)
-  
+  // Fetch products based on query parameters
+  const {
+    data: productsState,
+    error,
+    isLoading,
+  } = useGetProductsOnQueryQuery({
+    tag: tagValue,
+    category: catValue,
+  });
 
   const [newBrand, setNewBrand] = useState([]);
   const [newCategory, setNewCategory] = useState([]);
   const [newTag, setNewTag] = useState([]);
 
-  const [brand, setBrand] = useState("");
-  const [category, setCategory] = useState("");
-  const [tag, setTag] = useState("");
-
   useEffect(() => {
-    let brandSet = new Set();
-    let categorySet = new Set();
-    let tagSet = new Set();
+    if (productsState) {
+      let brandSet = new Set();
+      let categorySet = new Set();
+      let tagSet = new Set();
 
-    for (let index = 0; index < productsState?.length; index++) {
-      const element = productsState[index];
-      brandSet.add(element?.brand?.title);
-      categorySet.add(element?.category?.title);
-      tagSet.add(element?.tag);
+      for (let index = 0; index < productsState.length; index++) {
+        const element = productsState[index];
+        brandSet.add(element?.brand?.title);
+        categorySet.add(element?.category?.title);
+        tagSet.add(element?.tag);
+      }
+
+      setNewBrand([...brandSet]);
+      setNewCategory([...categorySet]);
+      setNewTag([...tagSet]);
     }
-
-    // Use spread operator to convert sets back to arrays
-    setNewBrand([...brandSet]);
-    setNewCategory([...categorySet]);
-    setNewTag([...tagSet]);
   }, [productsState]);
 
-  // console.log(newBrand);
-  // console.log(newCategory);
-  
+  if (isLoading) return <div>Loading products...</div>;
+  if (error) return <div>Error loading products</div>;
 
   return (
     <>
@@ -73,7 +65,7 @@ const OurStore = () => {
                   {newCategory &&
                     newCategory?.map((item, index) => {
                       return (
-                        <li key={index} onClick={(item) => setCategory(item)}>
+                        <li key={index} onClick={() => setCategory(item)}>
                           {item}
                         </li>
                       );
@@ -114,9 +106,9 @@ const OurStore = () => {
                     newTag?.map((item, index) => {
                       return (
                         <span
-                          className="bagde bg-light text-secondary rounded-3 py-2 px-3"
+                          className="badge bg-light text-secondary rounded-3 py-2 px-3"
                           key={index}
-                          onClick={(item) => setTag(item)}
+                          onClick={() => setTag(item)}
                         >
                           {item}
                         </span>
@@ -133,9 +125,9 @@ const OurStore = () => {
                     newBrand?.map((item, index) => {
                       return (
                         <span
-                          className="bagde bg-light text-secondary rounded-3 py-2 px-3"
+                          className="badge bg-light text-secondary rounded-3 py-2 px-3"
                           key={index}
-                          onClick={(item) => setBrand(item)}
+                          onClick={() => setBrand(item)}
                         >
                           {item}
                         </span>
@@ -214,7 +206,7 @@ const OurStore = () => {
             </div>
             <div className="products-list pb-5">
               <div className="d-flex gap-10 flex-wrap">
-                {productsQuery?.map((item, index) => {
+                {productsState?.map((item, index) => {
                   return <ProductCard data={item} grid={grid} key={index} />;
                 })}
               </div>
@@ -227,3 +219,4 @@ const OurStore = () => {
 };
 
 export default OurStore;
+OurStore.jsx;

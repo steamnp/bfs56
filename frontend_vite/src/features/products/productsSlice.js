@@ -1,406 +1,224 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import productsService from "./productsService";
-import { toast } from "react-toastify";
+import { productApi } from "./productsService"; // Updated import with correct file name
 
 const initialState = {
   products: [],
-  productsQuery:[],
+  product: null,
+  cart: [],
+  wishlist: [],
+  orders: [],
   isLoading: false,
   isSuccess: false,
   isError: false,
   message: "",
 };
 
-export const getProducts = createAsyncThunk(
-  "product/all-products",
-  async (thunkAPI) => {
-    try {
-      const response = await productsService.getProducts();
-      return response;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
-  }
-);
-
-//to fetch a single product
+// Async thunk to get a single product by ID
 export const getAproduct = createAsyncThunk(
-  "product/single-product",
-  async (id, thunkAPI) => {
+  "products/getAproduct",
+  async (productId, thunkAPI) => {
     try {
-      const response = await productsService.getAProduct(id);
-      return response;
+      const response = await productApi.get(`/products/${productId}`);
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
 
-//add a product into wishlist
-export const addToWhishList = createAsyncThunk(
-  "product/addtowishlist",
-  async (prodId, thunkAPI) => {
+export const getProducts = createAsyncThunk(
+  "products/getProducts",
+  async (_, thunkAPI) => {
     try {
-      const response = await productsService.addToWhishList(prodId);
-      return response;
+      const response = await productApi.get("/products");
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
 
-//add a product into cart
-export const addToCart = createAsyncThunk(
-  "product/addtocart",
-  async (data, thunkAPI) => {
-    try {
-      const response = await productsService.addToCart(data);
-      return response;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
-  }
-);
-
-//fetching cart items of a user
-export const getCart = createAsyncThunk("product/getcart", async (thunkAPI) => {
-  try {
-    const response = await productsService.getCart();
-    return response;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data);
-  }
-});
-
-//deleting a product from cart
-export const deleteOneProductCart = createAsyncThunk(
-  "product/delete-procart",
-  async (id, thunkAPI) => {
-    try {
-      const response = await productsService.deleteOneProd(id);
-      return response;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
-  }
-);
-
-//for clearing the cart after completion of the order
-export const emptyCart = createAsyncThunk(
-  "cart/empty-cart",
-  async (thunkAPI) => {
-    try {
-      const response = await productsService.emptyCart();
-      return response;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
-  }
-);
-
-//for updating quantity of a product
-export const updateQuantityCart = createAsyncThunk(
-  "product/update-proquantity",
-  async (cartDetails, thunkAPI) => {
-    try {
-      const response = await productsService.updateQuantityCart(cartDetails);
-      return response;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
-  }
-);
-
-//for creating an order
-export const createOrder = createAsyncThunk(
-  "product/create-order",
-  async (orderData, thunkAPI) => {
-    try {
-      const response = await productsService.createOrder(orderData);
-      return response;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
-  }
-);
-
-//for fetching orders of a particular user
-export const getOrders = createAsyncThunk("myorders", async (thunkAPI) => {
-  try {
-    const response = await productsService.getOrders();
-    return response;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data);
-  }
-});
-
-//for writing a review for a product
-export const writeReview = createAsyncThunk(
-  "product/add-review",
-  async (data, thunkAPI) => {
-    try {
-      const response = await productsService.writeReview(data);
-      return response;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
-  }
-);
-
-//get products of query
-export const getProductsOnQuery = createAsyncThunk(
-  "product/query",
-  async (query, thunkAPI) => {
-    try {
-      const response = await productsService.getProductsOnQuery(query);
-      return response;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
-  }
-);
-
-export const productsSlice = createSlice({
+const productsSlice = createSlice({
   name: "products",
   initialState,
-  reducers: {},
-  extraReducers: (builer) => {
-    builer
-      .addCase(getProducts.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getProducts.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
+  reducers: {
+    resetState: (state) => {
+      state.isLoading = false;
+      state.isSuccess = false;
+      state.isError = false;
+      state.message = "";
+    },
+    addToWhishList: (state, action) => {
+      state.wishlist.push(action.payload);
+      state.isSuccess = true;
+    },
+    addToCart: (state, action) => {
+      const product = action.payload;
+      state.cart.push(product);
+      state.isSuccess = true;
+    },
+    writeReview: (state, action) => {
+      const { prodId, comment, star } = action.payload;
+      const product = state.products.find((product) => product._id === prodId);
+      if (product) {
+        product.reviews.push({ comment, star });
         state.isSuccess = true;
-        state.products = action.payload;
-      })
-      .addCase(getProducts.rejected, (state, action) => {
-        state.products = [];
-        state.isError = true;
-        state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-      })
-      .addCase(addToWhishList.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(addToWhishList.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        if (action.payload.message === "Added to wishlist") {
-          toast.success("Added to wishlist", {
-            position: "bottom-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-        } else {
-          toast.error("Removed from wishlist", {
-            position: "bottom-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-        }
-        state.addToWishlist = action.payload;
-        state.message = "Added to wishlist";
-      })
-      .addCase(addToWhishList.rejected, (state, action) => {
-        state.isError = true;
-        state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-      })
+      }
+    },
+    deleteOneProductCart: (state, action) => {
+      const productId = action.payload;
+      state.cart = state.cart.filter((product) => product._id !== productId);
+      state.isSuccess = true;
+    },
+    getCart: (state, action) => {
+      state.cart = action.payload;
+      state.isSuccess = true;
+    },
+    updateQuantityCart: (state, action) => {
+      const { productId, quantity } = action.payload;
+      const cartItem = state.cart.find((item) => item._id === productId);
+      if (cartItem) {
+        cartItem.quantity = quantity;
+      }
+      state.isSuccess = true;
+    },
+    createOrder: (state, action) => {
+      state.orders.push(action.payload);
+      state.isSuccess = true;
+    },
+    emptyCart: (state) => {
+      state.cart = [];
+      state.isSuccess = true;
+    },
+    getOrders: (state, action) => {
+      state.orders = action.payload;
+      state.isSuccess = true;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
       .addCase(getAproduct.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(getAproduct.fulfilled, (state, action) => {
+        state.product = action.payload;
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.singleProduct = action.payload;
       })
       .addCase(getAproduct.rejected, (state, action) => {
-        state.singleProduct = [];
+        state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
+        state.message = action.payload;
       })
-      .addCase(addToCart.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(addToCart.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        state.cartItem = action.payload;
-        if (state.isSuccess) {
-          toast.success("Added to cart");
+      .addMatcher(
+        productApi.endpoints.getProducts.matchFulfilled,
+        (state, action) => {
+          state.products = action.payload;
+          state.isLoading = false;
+          state.isError = false;
+          state.isSuccess = true;
         }
-      })
-      .addCase(addToCart.rejected, (state, action) => {
-        state.cartItem = [];
-        state.isError = true;
-        state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-      })
-      .addCase(getCart.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getCart.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        state.cartProducts = action.payload;
-      })
-      .addCase(getCart.rejected, (state, action) => {
-        state.cartProducts = [];
-        state.isError = true;
-        state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-      })
-      .addCase(deleteOneProductCart.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(deleteOneProductCart.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        state.deletedProduct = action.payload;
-        if (state.isSuccess) {
-          toast.success("Item Deleted");
+      )
+      .addMatcher(
+        productApi.endpoints.getAProduct.matchFulfilled,
+        (state, action) => {
+          state.product = action.payload;
+          state.isLoading = false;
+          state.isError = false;
+          state.isSuccess = true;
         }
-      })
-      .addCase(deleteOneProductCart.rejected, (state, action) => {
-        state.deletedProduct = [];
-        state.isError = true;
-        state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-        if (state.isError) {
-          toast.error("Something Went Wrong");
+      )
+      .addMatcher(
+        productApi.endpoints.getCart.matchFulfilled,
+        (state, action) => {
+          state.cart = action.payload;
+          state.isLoading = false;
+          state.isError = false;
+          state.isSuccess = true;
         }
-      })
-      .addCase(updateQuantityCart.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(updateQuantityCart.fulfilled, (state, action) => {
+      )
+      .addMatcher(
+        productApi.endpoints.getOrders.matchFulfilled,
+        (state, action) => {
+          state.orders = action.payload;
+          state.isLoading = false;
+          state.isError = false;
+          state.isSuccess = true;
+        }
+      )
+      .addMatcher(
+        productApi.endpoints.getProductsOnQuery.matchFulfilled,
+        (state, action) => {
+          state.products = action.payload;
+          state.isLoading = false;
+          state.isError = false;
+          state.isSuccess = true;
+        }
+      )
+      .addMatcher(
+        productApi.endpoints.addToCart.matchFulfilled,
+        (state, action) => {
+          state.cart.push(action.payload);
+          state.isLoading = false;
+          state.isError = false;
+          state.isSuccess = true;
+        }
+      )
+      .addMatcher(
+        productApi.endpoints.addToWhishList.matchFulfilled,
+        (state, action) => {
+          state.isLoading = false;
+          state.isError = false;
+          state.isSuccess = true;
+        }
+      )
+      .addMatcher(
+        productApi.endpoints.createOrder.matchFulfilled,
+        (state, action) => {
+          state.orders.push(action.payload);
+          state.isLoading = false;
+          state.isError = false;
+          state.isSuccess = true;
+        }
+      )
+      .addMatcher(
+        productApi.endpoints.writeReview.matchFulfilled,
+        (state, action) => {
+          state.isLoading = false;
+          state.isError = false;
+          state.isSuccess = true;
+        }
+      )
+      .addMatcher(
+        productApi.endpoints.deleteOneProd.matchFulfilled,
+        (state, action) => {
+          state.cart = state.cart.filter((item) => item.id !== action.meta.arg);
+          state.isLoading = false;
+          state.isError = false;
+          state.isSuccess = true;
+        }
+      )
+      .addMatcher(productApi.endpoints.emptyCart.matchFulfilled, (state) => {
+        state.cart = [];
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.updatedItem = action.payload;
-      })
-      .addCase(updateQuantityCart.rejected, (state, action) => {
-        state.updatedItem = [];
-        state.isError = true;
-        state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-        if (state.isError) {
-          toast.error("Something Went Wrong");
-        }
-      })
-      .addCase(createOrder.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(createOrder.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        state.createdOrder = action.payload;
-        if (state.isSuccess) {
-          toast.success("Order Placed 🎉");
-        }
-      })
-      .addCase(createOrder.rejected, (state, action) => {
-        state.createdOrder = [];
-        state.isError = true;
-        state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-        if (state.isError) {
-          toast.error("Something Went Wrong");
-        }
-      })
-      .addCase(getOrders.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getOrders.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        state.myOrders = action.payload;
-      })
-      .addCase(getOrders.rejected, (state, action) => {
-        state.myOrders = [];
-        state.isError = true;
-        state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-      })
-      .addCase(writeReview.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(writeReview.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        if (state.isSuccess) {
-          toast.success("Review Added Successfully");
-        }
-      })
-      .addCase(writeReview.rejected, (state, action) => {
-        state.isError = true;
-        state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-        if (state.isError) {
-          toast.error("Something Went Wrong");
-        }
-      })
-      .addCase(emptyCart.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(emptyCart.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-      })
-      .addCase(emptyCart.rejected, (state, action) => {
-        state.isError = true;
-        state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-      })
-      .addCase(getProductsOnQuery.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getProductsOnQuery.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        state.productsQuery = action.payload;
-      })
-      .addCase(getProductsOnQuery.rejected, (state, action) => {
-        state.isError = true;
-        state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
       });
   },
 });
 
+export const {
+  addToCart,
+  resetState,
+  addToWhishList,
+  writeReview,
+  deleteOneProductCart,
+  getCart,
+  updateQuantityCart,
+  createOrder,
+  emptyCart,
+  getOrders,
+} = productsSlice.actions;
 export default productsSlice.reducer;

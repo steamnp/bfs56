@@ -1,23 +1,23 @@
-import React, { useEffect } from "react";
+// src/components/Wishlist.jsx
+
+import React from "react";
 import Meta from "../components/Meta";
 import BreadCrumb from "../components/BreadCrumb";
 import Container from "../components/Container";
-import { useDispatch, useSelector } from "react-redux";
-import { getwishlist } from "../features/auth/authSlice";
-import { addToWhishList } from "../features/products/productsSlice";
+import { useDispatch } from "react-redux";
+import { useGetWishListQuery } from "../features/auth/authService";
+import { addToCart } from "../features/products/productsSlice"; // Update import if needed
+
 const Wishlist = () => {
   const dispatch = useDispatch();
+  const { data: wishList, error, isLoading } = useGetWishListQuery();
 
-  useEffect(() => {
-    dispatch(getwishlist());
-  }, []);
-
-  const addTtoWlist = (id) => {
-    // console.log(id);
-    dispatch(addToWhishList(id));
+  const handleAddToCart = (id) => {
+    dispatch(addToCart(id)); // Update the action based on what you need
   };
 
-  const wishList = useSelector((state) => state.auth.wishlist);
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading wishlist</div>;
 
   return (
     <>
@@ -29,32 +29,30 @@ const Wishlist = () => {
             {wishList?.length === 0 && (
               <div className="text-center">Wishlist is empty</div>
             )}
-            {wishList?.map((item, index) => {
-              return (
-                <div className="col-3" key={index}>
-                  <div className="wishlist-card position-relative">
+            {wishList?.map((item, index) => (
+              <div className="col-3" key={index}>
+                <div className="wishlist-card position-relative">
+                  <img
+                    src="images/cross.svg"
+                    alt="cross"
+                    className="position-absolute cross img-fluid"
+                    onClick={() => handleAddToCart(item?._id)}
+                  />
+                  <div className="wishlist-card-image">
                     <img
-                      src="images/cross.svg"
-                      alt="cross"
-                      className="position-absolute cross img-fluid"
-                      onClick={() => addTtoWlist(item?._id)}
+                      src={item?.images[0]}
+                      className="img-fluid w-100"
+                      alt={item?.title}
                     />
-                    <div className="wishlist-card-image">
-                      <img
-                        src={item?.images[0]}
-                        className="img-fluid w-100"
-                        alt="watch"
-                      />
-                    </div>
-                    <div className="py-3 px-3">
-                      <h5 className="title">{item?.title}</h5>
-                      <h6 className="price">₹{item?.price}</h6>
-                      <button className="button border-0">Add to cart</button>
-                    </div>
+                  </div>
+                  <div className="py-3 px-3">
+                    <h5 className="title">{item?.title}</h5>
+                    <h6 className="price">₹{item?.price}</h6>
+                    <button className="button border-0">Add to cart</button>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </Container>

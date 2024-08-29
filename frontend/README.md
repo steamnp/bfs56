@@ -1,8 +1,20 @@
-# React + Vite
+### How to run backend project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### clone repo from github
 
-Currently, two official plugins are available:
+### Go to backend directory
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+'cd backend'
+
+### Install dependencies
+
+'npm i'
+
+### Prepare .env file wth following variables
+
+'MONGODB_URL='
+'PORT=4000'
+
+### Run project
+
+'npm start

@@ -9,7 +9,8 @@ import * as Yup from "yup";
 import { TbGitCompare } from "react-icons/tb";
 import { AiOutlineHeart } from "react-icons/ai";
 import Container from "../components/Container";
-import { useLocation, useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom"; // Correct import for useLocation and useNavigate
+import { useDispatch, useSelector } from "react-redux";
 import {
   addToCart,
   getAproduct,

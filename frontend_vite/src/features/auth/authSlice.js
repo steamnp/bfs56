@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import authService from "./authService";
 import { toast } from "react-toastify";
+import { authApi } from "./authService"; // Import your authApi
 
 const initialState = {
   signedUpUser: null,
@@ -13,64 +13,71 @@ const initialState = {
   message: "",
 };
 
-//for registering a user
+// for registering a user
 export const registerUser = createAsyncThunk(
   "user/register",
   async (data, thunkAPI) => {
     try {
-      const response = await authService.registerUser(data);
+      const response = await authApi.endpoints.registerUser
+        .initiate(data)
+        .unwrap();
       return response;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.data || error.message);
     }
   }
 );
 
-//for login as a user
+// for logging in a user
 export const loginUser = createAsyncThunk(
   "user/login",
   async (data, thunkAPI) => {
     try {
-      const response = await authService.loginUser(data);
+      const response = await authApi.endpoints.loginUser
+        .initiate(data)
+        .unwrap();
       return response;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.data || error.message);
     }
   }
 );
 
-//update a user details
+// for updating user details
 export const updateUser = createAsyncThunk(
   "user/update",
   async (data, thunkAPI) => {
     try {
-      const response = await authService.updateUser(data);
+      const response = await authApi.endpoints.updateUser
+        .initiate(data)
+        .unwrap();
       return response;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.data || error.message);
     }
   }
 );
 
-// for fetching user wishlist
-export const getwishlist = createAsyncThunk(
-  "user/get-wishlist",
-  async (thunkAPI) => {
+// for fetching the user wishlist
+export const getWishlist = createAsyncThunk(
+  "user/getWishlist",
+  async (_, thunkAPI) => {
     try {
-      const response = await authService.getWishList();
+      const response = await authApi.endpoints.getWishList.initiate().unwrap();
       return response;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.data || error.message);
     }
   }
 );
 
-export const authSlice = createSlice({
+const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {},
-  extraReducers: (builer) => {
-    builer
+  extraReducers: (builder) => {
+    builder
+      // Register User
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
       })
@@ -79,96 +86,69 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        if (state.isSuccess) {
-          toast.success("Signed Up Successfully");
-        }
+        toast.success("Signed Up Successfully");
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.signedUpUser = null;
+        state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-        if (state.isError) {
-          toast.error("Something went wrong", {
-            position: "bottom-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-        }
+        state.message = action.payload || "Failed to register";
+        toast.error("Something went wrong during registration");
       })
+
+      // Login User
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
+        state.loginedUser = action.payload;
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.loginedUser = action.payload;
-        if (state.isSuccess) {
-          toast.success("Login Successfull", {
-            position: "bottom-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-        }
+        toast.success("Login Successful");
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-        if (state.isError) {
-          toast.error(action.payload.response.data.message);
-        }
+        state.message = action.payload || "Failed to login";
+        toast.error("Something went wrong during login");
       })
-      .addCase(getwishlist.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getwishlist.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        state.wishlist = action.payload;
-      })
-      .addCase(getwishlist.rejected, (state, action) => {
-        state.wishlist = [];
-        state.isError = true;
-        state.isSuccess = false;
-        state.isLoading = false;
-        state.message = action.payload.message;
-      })
+
+      // Update User
       .addCase(updateUser.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
+        state.updatedUser = action.payload;
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.updatedUser = action.payload;
-        if (state.isSuccess) {
-          toast.success("Profile Updated");
-        }
+        toast.success("Profile Updated Successfully");
       })
       .addCase(updateUser.rejected, (state, action) => {
-        state.updatedUser = [];
+        state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
+        state.message = action.payload || "Failed to update profile";
+        toast.error("Something went wrong during profile update");
+      })
+
+      // Get Wishlist
+      .addCase(getWishlist.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getWishlist.fulfilled, (state, action) => {
+        state.wishlist = action.payload;
         state.isLoading = false;
-        state.message = action.payload.message;
-        if (state.isError) {
-          toast.error("Something went wrong");
-        }
+        state.isError = false;
+        state.isSuccess = true;
+      })
+      .addCase(getWishlist.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload || "Failed to fetch wishlist";
       });
   },
 });

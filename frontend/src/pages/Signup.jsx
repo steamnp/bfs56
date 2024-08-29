@@ -1,30 +1,28 @@
 import React, { useEffect } from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
-
 import Container from "../components/Container";
 import CustomInput from "../components/CustomInput";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../features/auth/authSlice";
+import { useRegisterUserMutation } from "../features/auth/authService"; // Updated import
 import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
   firstname: Yup.string().required("First name is required"),
-  lastname: Yup.string().required("last name is required"),
-  email: Yup.string().email("Please give a valid email"),
+  lastname: Yup.string().required("Last name is required"),
+  email: Yup.string()
+    .email("Please give a valid email")
+    .required("Email is required"),
   mobile: Yup.number().required("Mobile is required"),
   password: Yup.string().required("Password is required"),
 });
 
 const Signup = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const signedUpUser = useSelector((state) => state?.auth.signedUpUser);
-  console.log(signedUpUser);
-  const authState = useSelector((state) => state?.auth);
+  const [registerUser, { isLoading, isError, isSuccess }] =
+    useRegisterUserMutation(); // Using the hook from createApi
 
   const formik = useFormik({
     initialValues: {
@@ -35,17 +33,24 @@ const Signup = () => {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      dispatch(registerUser(values));
+    onSubmit: async (values) => {
+      try {
+        const result = await registerUser(values).unwrap();
+        console.log("Signup successful:", result);
+        formik.resetForm();
+        navigate("/login");
+      } catch (err) {
+        console.error("Failed to sign up:", err);
+      }
     },
   });
 
   useEffect(() => {
-    if (signedUpUser !== null && authState.isError === false) {
-      formik.resetForm();
+    if (isSuccess && !isError) {
       navigate("/login");
+      formik.resetForm();
     }
-  }, [authState]);
+  }, [isSuccess, isError]);
 
   return (
     <>
@@ -106,7 +111,7 @@ const Signup = () => {
                   {formik.touched.mobile && formik.errors.mobile}
                 </div>
                 <CustomInput
-                  placeholder="password"
+                  placeholder="Password"
                   classname="form-control"
                   type="password"
                   value={formik.values.password}
@@ -116,19 +121,13 @@ const Signup = () => {
                 <div className="error">
                   {formik.touched.password && formik.errors.password}
                 </div>
-                <button className="button border-0" type="submit">
+                <button
+                  className="button border-0"
+                  type="submit"
+                  disabled={isLoading}
+                >
                   Sign Up
                 </button>
-                {/* <div>
-                  <div className="mt-3 d-flex justify-content-center gap-15 align-items-center">
-                    <button className="button border-0" type="submit">
-                      Sign Up
-                    </button>
-                    <Link to="/signup" className="button signup" type="submit">
-                      SignUp
-                    </Link>
-                  </div>
-                </div> */}
               </form>
             </div>
           </div>

@@ -1,57 +1,59 @@
-import axios from "axios";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { base_url } from "../../utils/base-url";
 import { Token } from "../../utils/tokenConfig";
 
 const token = Token();
 
-const loginUser = async (data) => {
-  try {
-    const response = await axios.post(`${base_url}user/login`, data);
-    if (response.data) {
-      localStorage.setItem("user", JSON.stringify(response.data));
-    }
-    return response.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const registerUser = async (data) => {
-  try {
-    const response = await axios.post(`${base_url}user/register`, data);
-    return response.data;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
-const updateUser = async (data) => {
-  try {
-    const response = await axios.put(`${base_url}user/user-edit`, data, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+export const authApi = createApi({
+  reducerPath: "authApi",
+  baseQuery: fetchBaseQuery({
+    baseUrl: base_url,
+    prepareHeaders: (headers) => {
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      headers.set("Content-Type", "application/json");
+      return headers;
+    },
+  }),
+  endpoints: (builder) => ({
+    loginUser: builder.mutation({
+      query: (data) => ({
+        url: "user/login",
+        method: "POST",
+        body: data,
+      }),
+      transformResponse: (response) => {
+        localStorage.setItem("user", JSON.stringify(response));
+        return response;
       },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
+    }),
+    registerUser: builder.mutation({
+      query: (data) => ({
+        url: "user/register",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateUser: builder.mutation({
+      query: (data) => ({
+        url: "user/user-edit",
+        method: "PUT",
+        body: data,
+      }),
+    }),
+    getWishList: builder.query({
+      query: () => ({
+        url: "user/wishlist/",
+        method: "GET",
+      }),
+    }),
+  }),
+});
 
-const getWishList = async () => {
-  try {
-    const response = await axios.get(`${base_url}user/wishlist/`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
-const authService = { registerUser, loginUser, getWishList,updateUser };
-export default authService;
+export const {
+  useLoginUserMutation,
+  useRegisterUserMutation,
+  useUpdateUserMutation,
+  useGetWishListQuery,
+} = authApi;

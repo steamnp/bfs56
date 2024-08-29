@@ -4,7 +4,6 @@ import Meta from "../components/Meta";
 import Container from "../components/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { getOrders } from "../features/products/productsSlice";
-import { logDOM } from "@testing-library/react";
 // ... (your imports)
 
 const Orders = () => {

@@ -4,6 +4,7 @@ import { store } from "./app/store";
 import App from "./App";
 import { Provider } from "react-redux";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 if (import.meta.env.NODE_ENV === "production") {
   disableReactDevTools();
